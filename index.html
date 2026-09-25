@@ -98,6 +98,7 @@ h1,h2,h3{margin:0;text-wrap:balance}
 .habits{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .habit{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:12px;display:flex;gap:10px;align-items:center;text-align:left;cursor:pointer;font-size:14px;font-weight:500}
 .habit .check{width:24px;height:24px;border-radius:8px}
+.habit:last-child:nth-child(odd){grid-column:1/-1}
 
 /* train */
 .chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
@@ -272,40 +273,48 @@ const PLAN = {
     2: { kind: 'gym', w: 'B', menu: 'work' },
     3: { kind: 'rest', menu: 'vegan' },
     4: { kind: 'gym', w: 'C', menu: 'work' },
-    5: { kind: 'gym', w: 'D', menu: 'vegan' },
+    5: { kind: 'gym', w: 'D', menu: 'veganGym' },
     6: { kind: 'cardio', w: 'SAT', menu: 'sat' },
     0: { kind: 'cardio', w: 'SUN', menu: 'sun' },
   },
   menus: {
-    work: { name: 'Workday menu', meals: [
-      { t: '07:00', m: '250 g Greek yogurt 0% + 40 g oats + 1 fruit + 15 g walnuts', k: 455, p: 32 },
+    work: { name: 'Gym day menu', meals: [
+      { t: '07:00', m: '250 g Greek yogurt 0% + 40 g oats + 1 fruit + 15 g walnuts — or breakfast shake: 250 ml oat milk + 1 scoop whey + 30 g oats + 1 small banana, walnuts on the side', k: 455, p: 32 },
       { t: '12:30', m: '150 g chicken + 100 g rice or pasta (dry) + 200 g vegetables + 1 tsp oil', k: 625, p: 45 },
-      { t: '17:00', m: '3 boiled eggs + 1 fruit', k: 280, p: 19 },
-      { t: '21:00', m: '250 g white fish + 250 g potatoes + salad + 1 spoon oil + 60 g bread', k: 600, p: 47 },
-      { t: 'Later', m: '1 fruit', k: 70, p: 0 },
+      { t: '17:00', m: '⚡ Pre-workout shake: 250 ml oat milk + 1 banana + 30 g oats + ½ scoop whey', k: 370, p: 20 },
+      { t: '20:45', m: '💪 Post-workout shake: 1 scoop whey + 5 g creatine + 300 ml cold water', k: 120, p: 24 },
+      { t: '21:00', m: '250 g white fish + 250 g potatoes + salad + 1 spoon oil (no bread, no late fruit)', k: 450, p: 42 },
     ]},
-    vegan: { name: 'Vegan menu', vegan: true, meals: [
-      { t: '07:00', m: '300 ml soy milk + 50 g oats + 1 scoop pea protein + 1 banana', k: 505, p: 41 },
+    vegan: { name: 'Vegan menu · rest day', vegan: true, meals: [
+      { t: '07:00', m: 'Breakfast shake: 300 ml oat milk + 1 scoop pea protein + 40 g oats + 1 banana + 5 g creatine', k: 485, p: 33 },
       { t: '12:30', m: '90 g red lentil pasta + 150 g passata + 150 g vegetables + 1 tsp oil', k: 440, p: 27 },
       { t: '17:00', m: '150 g roasted chickpeas + 1 apple', k: 260, p: 11 },
       { t: '21:00', m: '80 g chickpea pasta + lentil ragù + salad with lemon', k: 640, p: 36 },
       { t: 'Later', m: '150 g plain soy yogurt + cinnamon', k: 85, p: 6 },
     ]},
+    veganGym: { name: 'Vegan menu · gym day', vegan: true, meals: [
+      { t: '07:00', m: 'Breakfast shake: 300 ml oat milk + 1 scoop pea protein + 40 g oats + 1 banana', k: 485, p: 33 },
+      { t: '12:30', m: '90 g red lentil pasta + 150 g passata + 150 g vegetables + 1 tsp oil', k: 440, p: 27 },
+      { t: '17:00', m: '⚡ Pre-workout shake: 250 ml oat milk + 1 banana + 30 g oats + ½ scoop pea protein', k: 370, p: 20 },
+      { t: '20:45', m: '💪 Post-workout shake: 1 scoop pea protein + 5 g creatine + 300 ml cold water', k: 115, p: 24 },
+      { t: '21:00', m: '60 g chickpea pasta + lentil ragù + salad with lemon (no soy yogurt later)', k: 570, p: 32 },
+    ]},
     sat: { name: 'Weekend menu', meals: [
       { t: '10:00', m: 'Omelette: 3 eggs + 100 g egg whites + spinach, 2 slices bread, 1 fruit', k: 480, p: 36 },
       { t: '14:00', m: '2 tins tuna + 200 g boiled potatoes + big salad + 1 spoon oil', k: 440, p: 44 },
-      { t: '17:00', m: '170 g Greek yogurt + 1 fruit + 20 g nuts', k: 290, p: 20 },
+      { t: '17:00', m: 'Shake (post-run if you run in the afternoon): 1 scoop whey + 200 ml oat milk + 1 banana + ice + 5 g creatine', k: 300, p: 27 },
       { t: '21:00', m: 'Free meal: 1 pizza + water or 1 beer', k: 850, p: 35 },
     ]},
     sun: { name: 'Weekend menu', meals: [
       { t: '10:00', m: 'Omelette: 3 eggs + 100 g egg whites + spinach, 2 slices bread, 1 fruit', k: 480, p: 36 },
       { t: '14:00', m: '2 tins tuna + 200 g boiled potatoes + big salad + 1 spoon oil', k: 440, p: 44 },
-      { t: '17:00', m: '170 g Greek yogurt + 1 fruit + 20 g nuts', k: 290, p: 20 },
+      { t: '17:00', m: 'Shake (post-run if you run in the afternoon): 1 scoop whey + 200 ml oat milk + 1 banana + ice + 5 g creatine', k: 300, p: 27 },
       { t: '21:00', m: '200 g chicken or turkey + 80 g rice + vegetables + 1 tsp oil', k: 600, p: 51 },
     ]},
   },
 };
 const HABITS = [
+  { id: 'creatine', n: 'Creatine 5 g' },
   { id: 'water', n: 'Water 2.5–3 L' },
   { id: 'steps', n: '8,000+ steps' },
   { id: 'coffee', n: 'No coffee after 16:00' },
@@ -321,6 +330,9 @@ const TIPS = [
   'Vegan days: every meal needs a protein food. Lemon on the salad helps iron absorption.',
   'Feeling very sore? Swap Saturday intervals for a 40 min incline walk.',
   'Sunday prep = an easy week. Chicken, rice, potatoes, lentil ragù.',
+  'Creatine: 5 g every day, even rest days. The first weeks the scale may go up 0.5–1.5 kg — that’s water, not fat. Trust your waist.',
+  'Pre-workout shake: pack oats + powder dry in the morning, add oat milk at 17:00.',
+  'Whey is milk — on Wednesday and Friday use pea protein.',
   'Stop each set 1–2 reps before failure. Hard, but clean.',
 ];
 const DOW = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -466,7 +478,7 @@ function renderToday() {
       <button class="item ${rec.walk ? 'on' : ''}" data-act="walk" style="padding:0">
         <span class="grow"><span class="display h2" style="display:block">Rest day</span><span class="muted small">20–30 min easy walk · recovery builds the muscle</span></span>
         <span class="check">${CHECK}</span></button>
-      <div class="muted small">Evening prep: roast chickpeas for Friday + boil 6 eggs.</div></section>`;
+      <div class="muted small">Evening prep: boil 6 eggs · put oats + pea protein in a bottle for Friday’s 17:00 shake.</div></section>`;
   } else {
     const w = workoutOf(plan.w);
     const meta = w.ex ? `${w.ex.length} exercises · about 60 min` : `${w.steps.length} steps · about 35 min`;
