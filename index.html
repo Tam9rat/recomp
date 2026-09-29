@@ -391,6 +391,19 @@ const dayRec = (k, create) => S.days[k] || (create ? (S.days[k] = { meals: [], h
 function weekNo(k = todayKey()) { return Math.max(1, Math.floor(daysBetween(S.start, k) / 7) + 1); }
 const learning = () => daysBetween(S.start, todayKey()) < 14;
 const setsFor = ex => learning() ? Math.min(ex.s, 3) : ex.s;
+// Sets that were planned on a given date (weeks 1–2 use max 3 sets)
+const setsOn = (ex, k) => daysBetween(S.start, k) < 14 ? Math.min(ex.s, 3) : ex.s;
+// A session counts when finished — or when at least half of it was logged (forgot to press Finish)
+function sessionCounts(k, s) {
+  if (s.finished) return true;
+  const wo = workoutOf(s.w); if (!wo) return false;
+  if (wo.ex) {
+    const planned = wo.ex.reduce((a, e) => a + setsOn(e, k), 0);
+    const done = Object.values(s.ex || {}).reduce((a, arr) => a + arr.filter(x => x.done).length, 0);
+    return done >= planned / 2;
+  }
+  return (s.steps || []).filter(Boolean).length >= wo.steps.length / 2;
+}
 const workoutOf = w => PLAN.workouts[w] || PLAN.cardio[w];
 const sessKey = (k, w) => `${k}|${w}`;
 function getSession(w, create) {
@@ -401,7 +414,7 @@ function getSession(w, create) {
 function dayStatus(k) {
   const plan = planFor(k), rec = dayRec(k);
   const trained = (plan.kind === 'rest' && !!rec.walk)
-    || Object.keys(S.sessions).some(x => x.startsWith(k + '|') && S.sessions[x].finished);
+    || Object.keys(S.sessions).some(x => x.startsWith(k + '|') && sessionCounts(k, S.sessions[x]));
   const total = PLAN.menus[plan.menu].meals.length;
   const meals = (rec.meals || []).filter(Boolean).length;
   const habits = Object.values(rec.habits || {}).filter(Boolean).length;
@@ -426,7 +439,7 @@ function lastSets(id) {
 function suggest(ex, last) {
   if (!last) return { txt: ex.bw ? 'First time — focus on clean, controlled reps' : 'First time — pick a weight you can lift with good form', kg: null };
   const reps = last.sets.map(s => +s.r || 0);
-  const allTop = last.sets.length >= setsFor(ex) && reps.every(r => r >= ex.hi);
+  const allTop = last.sets.length >= setsOn(ex, last.date) && reps.every(r => r >= ex.hi);
   if (ex.bw) return { txt: allTop ? `Hit the top last time — add ${ex.unit === 's' ? '5 s' : '1–2 reps'}` : 'Beat last time by one rep', up: allTop, kg: null };
   const kg = Math.max(...last.sets.map(s => +s.kg || 0));
   if (!kg) return { txt: 'Beat last time by one rep', kg: null };
@@ -759,7 +772,7 @@ function summaryText() {
     const st = dayStatus(k); planned++; if (st.trained) trained++; meals += st.meals; mealsTot += st.total;
   }
   for (const [key, s] of Object.entries(S.sessions).sort()) {
-    const d = key.split('|')[0]; if (d < mk || !s.finished) continue;
+    const d = key.split('|')[0]; if (d < mk || !sessionCounts(d, s)) continue;
     const wo = workoutOf(s.w);
     lifts.push(`${DOW[parseKey(d).getDay()]} — ${wo.name} (${wo.focus})`);
     if (wo.ex) for (const ex of wo.ex) { const a = (s.ex[ex.id] || []).filter(x => x.done); if (a.length) lifts.push(`  ${ex.n}: ${a.map(x => ex.bw ? x.r : `${x.kg}×${x.r}`).join(', ')}`); }
