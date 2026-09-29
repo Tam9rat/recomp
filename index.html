@@ -126,6 +126,8 @@ h1,h2,h3{margin:0;text-wrap:balance}
 .field{display:grid;gap:6px;font-size:13px;color:var(--muted);font-weight:500}
 .field input,.field select{font:600 18px var(--body);padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);color:var(--text);width:100%;min-width:0}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.logfor{grid-template-columns:auto 1fr;align-items:center;gap:10px}
+.logfor select{font-size:16px;padding:9px 12px}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 
 /* timer */
@@ -214,7 +216,7 @@ nav.tabs button[aria-current="page"]{color:var(--accent)}
 const GOAL = { start: 79, target: 72, weeks: 12 };
 const PLAN = {
   workouts: {
-    A: { name: 'Workout A', focus: 'Legs', finisher: 'Finish: 10 min easy treadmill · 8–9 km/h', ex: [
+    A: { name: 'Workout A', focus: 'Legs', finisher: 'Finish: 5 min easy walk + stretch', ex: [
       { id: 'goblet', n: 'Goblet squat', note: 'later: barbell squat', s: 4, lo: 8, hi: 10, rest: 120, inc: 2 },
       { id: 'rdl', n: 'Romanian deadlift', note: 'dumbbells', s: 3, lo: 10, hi: 10, rest: 90, inc: 2 },
       { id: 'legpress', n: 'Leg press', s: 3, lo: 12, hi: 12, rest: 90, inc: 5 },
@@ -222,7 +224,7 @@ const PLAN = {
       { id: 'calfstand', n: 'Standing calf raise', note: '2 s up · 1 s squeeze · 2 s down', s: 4, lo: 12, hi: 15, rest: 60, inc: 2.5 },
       { id: 'plank', n: 'Plank', s: 3, lo: 30, hi: 45, rest: 60, unit: 's', bw: true },
     ]},
-    B: { name: 'Workout B', focus: 'Upper body + arms', finisher: 'Finish: 10 min easy treadmill', ex: [
+    B: { name: 'Workout B', focus: 'Upper body + arms', finisher: 'Finish: 5 min easy walk + stretch', ex: [
       { id: 'dbbench', n: 'Dumbbell bench press', s: 4, lo: 8, hi: 10, rest: 120, inc: 2 },
       { id: 'pulldown', n: 'Lat pulldown', s: 4, lo: 8, hi: 10, rest: 90, inc: 2.5 },
       { id: 'dbpress', n: 'Seated dumbbell shoulder press', s: 3, lo: 10, hi: 10, rest: 90, inc: 2 },
@@ -239,7 +241,7 @@ const PLAN = {
       { id: 'ohext', n: 'Overhead triceps extension', s: 3, lo: 12, hi: 12, rest: 60, inc: 2 },
       { id: 'calfseat', n: 'Seated calf raise', note: 'slow', s: 4, lo: 15, hi: 15, rest: 60, inc: 2.5 },
     ]},
-    D: { name: 'Workout D', focus: 'Arms, shoulders + calves', finisher: 'Then 20 min intervals: 5 min walk at 6 km/h → 5 rounds of 1 min at 11 km/h + 1.5 min walk → 2 min cool-down', ex: [
+    D: { name: 'Workout D', focus: 'Arms, shoulders + calves', finisher: 'Finish: 5 min easy walk + stretch. Want more? Add the Intervals session.', ex: [
       { id: 'cgbench', n: 'Close-grip bench press', note: 'or assisted dips', s: 3, lo: 8, hi: 10, rest: 90, inc: 2.5 },
       { id: 'ezcurl', n: 'EZ-bar curl', s: 3, lo: 10, hi: 10, rest: 60, inc: 2.5 },
       { id: 'lateral', n: 'Dumbbell lateral raise', s: 3, lo: 12, hi: 15, rest: 60, inc: 1 },
@@ -254,15 +256,15 @@ const PLAN = {
     SAT: { name: 'Interval run', focus: '+ core', finisher: 'Every 2 weeks add 30 s to each fast part. Goal: 3 min fast / 1 min walk.', steps: [
       { n: 'Warm-up walk', d: '5 min · 6 km/h' },
       { n: 'Easy jog', d: '2 min · 8 km/h' },
-      { n: 'Run 1.5 min at 11 km/h + walk 2 min at 6 km/h', d: '6 rounds', rounds: 6 },
+      { n: 'Run 1.5 min at 12 km/h + walk 2 min at 6 km/h', d: '6 rounds', rounds: 6 },
       { n: 'Cool-down walk', d: '3 min' },
       { n: 'Plank', d: '3 × 40 s' },
       { n: 'Side plank', d: '2 × 30 s per side' },
       { n: 'Dead bug', d: '3 × 10 per side' },
     ]},
-    SUN: { name: 'Steady run', focus: '+ core + stretching', finisher: 'Tired? 40 min incline walk instead. Goal: 5 km under 30 min.', steps: [
+    SUN: { name: 'Steady run', focus: '+ core + stretching', finisher: 'Tired? 40 min incline walk instead. Goal: 5 km in about 27 min, later under 25 min.', steps: [
       { n: 'Warm-up walk', d: '5 min · 6 km/h' },
-      { n: 'Steady run · 9–9.5 km/h · incline 1%', d: '25–30 min' },
+      { n: 'Steady run · 10.5–11 km/h · incline 1%', d: '25–27 min (5 km)' },
       { n: 'Cool-down walk', d: '5 min' },
       { n: 'Plank', d: '3 × 40 s' },
       { n: 'Side plank', d: '2 × 30 s per side' },
@@ -286,14 +288,14 @@ const PLAN = {
       { t: '12:30', m: 'Lunch box (prepped Sunday): 150 g chicken + 80 g rice (dry) + frozen vegetables + 1 tsp oil', k: 555, p: 44 },
       { t: '17:00', m: '⚡ Pre-workout: first half (250 ml) of the shake — 300 ml oat milk + 1 banana + 1 scoop whey + 40 g oats + 15 g peanut butter, blended in the morning', k: 290, p: 18 },
       { t: '20:45', m: '💪 Post-workout: second half (250 ml, from the fridge) + 5 g creatine', k: 290, p: 18 },
-      { t: '21:00', m: 'Quick dinner, 30+ g protein: beef ragù (prepped) or 150 g chicken + 150 g potatoes or rice + salad — or a lean beef burger (150 g macinato di manzo 5%), 3-egg omelette with 1 tin tuna, or 300 g Greek yogurt 0% + 40 g oats + 1 fruit (no cooking)', k: 400, p: 38 },
+      { t: '21:00', m: 'Quick dinner, 30+ g protein, + 1 slice bread: beef ragù (prepped) or 150 g chicken + 150 g potatoes or rice + salad — or a lean beef burger (150 g macinato di manzo 5%), 3-egg omelette with 1 tin tuna, or 300 g Greek yogurt 0% + 40 g oats + 1 fruit (no cooking)', k: 470, p: 40 },
     ]},
     gymYogurt: { name: 'Gym day menu', meals: [
       { t: '07:00', m: '🥚 250 g Greek yogurt 0% + 30 g oats + 1 fruit + 2 boiled eggs', k: 480, p: 41 },
       { t: '12:30', m: 'Lunch box (prepped Sunday): 150 g chicken + 80 g rice (dry) + frozen vegetables + 1 tsp oil', k: 555, p: 44 },
       { t: '17:00', m: '⚡ Pre-workout: first half (250 ml) of the shake — 300 ml oat milk + 1 banana + 1 scoop whey + 40 g oats + 15 g peanut butter, blended in the morning', k: 290, p: 18 },
       { t: '20:45', m: '💪 Post-workout: second half (250 ml, from the fridge) + 5 g creatine', k: 290, p: 18 },
-      { t: '21:00', m: 'Quick dinner, 30+ g protein: beef ragù (prepped) or 150 g chicken + 150 g potatoes or rice + salad — or a lean beef burger (150 g macinato di manzo 5%), 3-egg omelette with 1 tin tuna, or 300 g Greek yogurt 0% + 40 g oats + 1 fruit (no cooking)', k: 400, p: 38 },
+      { t: '21:00', m: 'Quick dinner, 30+ g protein, + 1 slice bread: beef ragù (prepped) or 150 g chicken + 150 g potatoes or rice + salad — or a lean beef burger (150 g macinato di manzo 5%), 3-egg omelette with 1 tin tuna, or 300 g Greek yogurt 0% + 40 g oats + 1 fruit (no cooking)', k: 470, p: 40 },
     ]},
     vegan: { name: 'Vegan menu · rest day', vegan: true, meals: [
       { t: '07:00', m: 'Shaker: 300 ml oat milk + 1 scoop pea protein + 40 g oats + 1 banana + 5 g creatine', k: 485, p: 33 },
@@ -334,6 +336,8 @@ const TIPS = [
   'Feeling very sore? Skip the Saturday intervals after Workout D and just walk 20 min.',
   'Sunday prep: boil 8–10 eggs (unpeeled, fridge), 5 lunch boxes, beef ragù, lentil boxes for Wednesday and Friday.',
   'Weekday breakfast = quick (eggs + bread or yogurt). Pancakes are for the weekend.',
+  'Every gym session starts with 10 min at 12 km/h. Legs heavy on Monday or Thursday? Drop to 11 km/h — no shame.',
+  'Forgot to log yesterday? In Train, change “Logging for” to Yesterday.',
   'Sunday prep = an easy week. Chicken, rice, potatoes, lentil ragù.',
   'Creatine: 5 g every day, even rest days. The first weeks the scale may go up 0.5–1.5 kg — that’s water, not fat. Trust your waist.',
   'Blend the gym shake in the morning and split it into 2 bottles. The post-workout half waits in your fridge at home.',
@@ -418,7 +422,7 @@ function sessionCounts(k, s) {
 const workoutOf = w => PLAN.workouts[w] || PLAN.cardio[w];
 const sessKey = (k, w) => `${k}|${w}`;
 function getSession(w, create) {
-  const k = sessKey(todayKey(), w);
+  const k = sessKey(logDate, w);
   if (!S.sessions[k] && create) S.sessions[k] = { w, ex: {}, steps: [], rounds: 0, finished: false };
   return S.sessions[k];
 }
@@ -438,8 +442,8 @@ function streak() {
   while (dayStatus(keyOf(d)).trained && n < 2000) { n++; d = addDays(d, -1); }
   return n;
 }
-function lastSets(id) {
-  const today = todayKey(); let best = null, date = '';
+function lastSets(id, before = todayKey()) {
+  const today = before; let best = null, date = '';
   for (const [key, s] of Object.entries(S.sessions)) {
     const d = key.split('|')[0]; if (d >= today) continue;
     const sets = s.ex && s.ex[id];
@@ -467,7 +471,7 @@ let sheetUrls = [];
 const sheetUrl = blob => { const u = URL.createObjectURL(blob); sheetUrls.push(u); return u; };
 function closeSheet() { $('#sheet-root').innerHTML = ''; sheetUrls.forEach(u => URL.revokeObjectURL(u)); sheetUrls = []; }
 const view = $('#view');
-let tab = 'today', trainSel = null, photoPose = 'Front', compareFrom = null;
+let tab = 'today', trainSel = null, photoPose = 'Front', compareFrom = null, logDate = todayKey();
 const urls = new Map();
 
 function render() {
@@ -553,16 +557,16 @@ function renderToday() {
 }
 
 /* ================= TRAIN ================= */
-function currentW() { const p = planFor(todayKey()); return trainSel || p.w || 'A'; }
+function currentW() { const p = planFor(logDate); return trainSel || p.w || 'A'; }
 function renderTrain() {
-  const p = planFor(todayKey()), w = currentW(), wo = workoutOf(w), sess = getSession(w, false);
+  const p = planFor(logDate), w = currentW(), wo = workoutOf(w), sess = getSession(w, false), past = logDate !== todayKey();
   const chips = [['A','A · Legs'],['B','B · Upper'],['C','C · Full'],['D','D · Arms'],['SAT','Intervals'],['SUN','Sun run']]
     .map(([id, l]) => `<button class="chip" data-act="pick-w" data-w="${id}" aria-pressed="${id === w}">${l}${p.w === id ? '<span class="today-mark" title="Today"></span>' : ''}</button>`).join('');
-  const restNote = p.kind === 'rest' && !trainSel ? `<div class="banner">${DOW[parseKey(todayKey()).getDay()]} is your rest day — walk 20–30 min. Pick a workout above only if you’re making one up.</div>` : '';
+  const restNote = p.kind === 'rest' && !trainSel ? `<div class="banner">${DOW[parseKey(logDate).getDay()]} is your rest day — walk 20–30 min. Pick a workout above only if you’re making one up.</div>` : '';
   let body = '';
   if (wo.ex) {
     body = wo.ex.map(ex => {
-      const last = lastSets(ex.id), sug = suggest(ex, last), n = setsFor(ex);
+      const last = lastSets(ex.id, logDate), sug = suggest(ex, last), n = setsOn(ex, logDate);
       const sets = (sess && sess.ex[ex.id]) || [];
       const lastTxt = last ? `Last (${shortDate(last.date)}): ${last.sets.map(s => ex.bw ? s.r : `${fmt(+s.kg || 0)}×${s.r}`).join(' · ')}` : '';
       const rows = Array.from({ length: n }, (_, i) => {
@@ -590,32 +594,46 @@ function renderTrain() {
       return `<div style="padding:12px 0;border-top:${i ? '1px solid var(--line)' : '0'}">
         <button class="item ${on ? 'on' : ''}" data-act="step" data-i="${i}" style="padding:0;border:0"><span class="grow"><b style="font-weight:600">${st.n}</b><br><span class="muted small num">${st.d}</span></span><span class="check">${CHECK}</span></button>${rounds}</div>`;
     }).join('');
-    body = `<section class="card">${steps}</section>
-      <section class="card stack"><span class="eyebrow">Treadmill result</span>
-        <div class="grid2">
-          <label class="field">Distance (km)<input type="number" inputmode="decimal" step="0.01" id="cf-km" data-cf="km" value="${(sess && sess.km) || ''}" placeholder="2.94"></label>
-          <label class="field">Time (min)<input type="number" inputmode="decimal" step="0.1" id="cf-min" data-cf="min" value="${(sess && sess.min) || ''}" placeholder="20.9"></label>
-        </div>
-        <div class="muted small" id="pace-line">${paceLine(sess)}</div>
-      </section>`;
+    body = `<section class="card">${steps}</section>${runBlock(sess, false)}`;
   }
   view.innerHTML = `<div class="stack">
     <header class="stack" style="gap:6px">
-      <span class="eyebrow">${learning() ? 'Weeks 1–2 · lighter weights, 3 sets, perfect form' : `Week ${weekNo()} · add weight when you hit the top`}</span>
+      <span class="eyebrow">${daysBetween(S.start, logDate) < 14 ? 'Weeks 1–2 · lighter weights, 3 sets, perfect form' : `Week ${weekNo(logDate)} · add weight when you hit the top`}</span>
       <h1 class="display h1">${wo.name}</h1><span class="muted">${wo.focus}</span>
     </header>
+    <label class="field logfor">Logging for<select id="log-date">${dayOptions()}</select></label>
+    ${past ? `<div class="banner">Logging a past day: ${DOW[parseKey(logDate).getDay()]} ${shortDate(logDate)}</div>` : ''}
     <div class="chips">${chips}</div>
     ${restNote}
-    ${wo.ex ? `<div class="card flat small"><b>Warm-up:</b> 5 min treadmill at 6 km/h + 10 squats + 10 push-ups. Stop each set 1–2 reps before failure.</div>` : ''}
+    ${wo.ex ? `<div class="card flat small"><b>Warm-up:</b> 5 min walk at 6 km/h → <b>10 min run at 12 km/h</b> → 10 squats + 10 push-ups. Stop each set 1–2 reps before failure.</div>${runBlock(sess, true)}` : ''}
     ${body}
     ${wo.finisher ? `<div class="muted small" style="padding:0 4px">${wo.finisher}</div>` : ''}
     <button class="btn" data-act="finish">${sess && sess.finished ? 'Finished ✓ — save changes' : 'Finish workout'}</button>
   </div>`;
 }
+function runBlock(sess, gym) {
+  const logged = sess && sess.km && sess.min;
+  return `<section class="card stack">
+    <div class="row between"><span class="eyebrow">${gym ? 'Run first · 10 min at 12 km/h' : 'Treadmill result'}</span>${logged ? '<span class="pill good">Logged ✓</span>' : ''}</div>
+    <div class="grid2">
+      <label class="field">Distance (km)<input type="number" inputmode="decimal" step="0.01" id="cf-km" data-cf="km" value="${(sess && sess.km) || ''}" placeholder="${gym ? '2.0' : '5.0'}"></label>
+      <label class="field">Time (min)<input type="number" inputmode="decimal" step="0.1" id="cf-min" data-cf="min" value="${(sess && sess.min) || ''}" placeholder="${gym ? '10' : '27'}"></label>
+    </div>
+    ${gym && !logged ? '<button class="btn ghost" data-act="run-quick">Done as planned · 2.0 km in 10 min</button>' : ''}
+    <div class="muted small" id="pace-line">${paceLine(sess)}</div>
+  </section>`;
+}
+function dayOptions() {
+  return Array.from({ length: 7 }, (_, i) => {
+    const k = keyOf(addDays(parseKey(todayKey()), -i));
+    const l = i === 0 ? 'Today' : i === 1 ? 'Yesterday' : DOW[parseKey(k).getDay()];
+    return `<option value="${k}" ${k === logDate ? 'selected' : ''}>${l} · ${shortDate(k)}</option>`;
+  }).join('');
+}
 function paceLine(s) { return s && s.km && s.min ? `Pace <b class="num" style="color:var(--text)">${pace(s.km, s.min)}</b> /km · average <b class="num" style="color:var(--text)">${fmt(s.km / (s.min / 60))}</b> km/h` : 'Enter distance and time to see your pace.'; }
 function pace(km, min) { const p = min / km, m = Math.floor(p), s = Math.round((p - m) * 60); return `${s === 60 ? m + 1 : m}:${pad(s === 60 ? 0 : s)}`; }
 function ensureSets(sess, ex) {
-  const n = setsFor(ex);
+  const n = setsOn(ex, logDate);
   if (!sess.ex[ex.id]) sess.ex[ex.id] = [];
   const a = sess.ex[ex.id];
   while (a.length < n) a.push({ kg: '', r: '', done: false });
@@ -626,11 +644,11 @@ function toggleSet(exId, i) {
   const kgEl = $(`input[data-ex="${exId}"][data-i="${i}"][data-f="kg"]`), rEl = $(`input[data-ex="${exId}"][data-i="${i}"][data-f="r"]`);
   if (kgEl) row.kg = kgEl.value; if (rEl) row.r = rEl.value;
   if (!row.done) {
-    const sug = suggest(ex, lastSets(exId));
+    const sug = suggest(ex, lastSets(exId, logDate));
     const prevKg = i > 0 ? arr[i - 1].kg : '';
     if (!ex.bw && row.kg === '') row.kg = prevKg !== '' ? prevKg : (sug.kg != null ? fmt(sug.kg) : '');
     if (row.r === '') row.r = String(ex.hi);
-    row.done = true; startRest(ex.rest);
+    row.done = true; if (logDate === todayKey()) startRest(ex.rest);
   } else row.done = false;
   save(); render();
 }
@@ -641,12 +659,13 @@ function finish() {
   if (wo.ex) for (const a of Object.values(sess.ex)) for (const r of a) if (r.done) { sets++; vol += (+r.kg || 0) * (+r.r || 0); }
   stopTimer();
   if (wasDone) { toast('Saved'); render(); return; }
+  if (logDate !== todayKey()) { toast(`Saved for ${DOW[parseKey(logDate).getDay()]} ${shortDate(logDate)}`); render(); return; }
   const s = streak();
   const sparks = Array.from({ length: 10 }, (_, i) => `<i class="spark" style="--r:${i * 36}deg"></i>`).join('');
   openSheet(`<div class="celebrate">
     <div class="medal">${sparks}<svg viewBox="0 0 120 120" aria-hidden="true"><circle class="ring" cx="60" cy="60" r="54" fill="none" stroke="var(--accent)" stroke-width="8" stroke-linecap="round" transform="rotate(-90 60 60)"/><path class="tick" d="M40 62l14 14 28-30" fill="none" stroke="var(--accent)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     <h2 class="display h2">${wo.name} done</h2>
-    <div class="muted">${wo.ex ? `${sets} sets · <span class="num">${Math.round(vol).toLocaleString('en')}</span> kg lifted` : (sess.km ? `${sess.km} km in ${sess.min} min` : 'Cardio complete')}</div>
+    <div class="muted">${wo.ex ? `${sets} sets · <span class="num">${Math.round(vol).toLocaleString('en')}</span> kg lifted${sess.km ? ` · ${sess.km} km run` : ''}` : (sess.km ? `${sess.km} km in ${sess.min} min` : 'Cardio complete')}</div>
     <div class="pill accent" style="font-size:14px">🔥 ${s}-day streak</div>
     <button class="btn" data-act="close" style="margin-top:8px">Nice</button></div>`);
   render();
@@ -759,10 +778,37 @@ function renderProgress() {
       <span class="legend">less <i style="background:var(--surface-2)"></i><i style="background:color-mix(in srgb,var(--accent) 30%,var(--surface-2))"></i><i style="background:color-mix(in srgb,var(--accent) 80%,var(--surface-2))"></i><i style="background:var(--accent)"></i> more</span></div>
       <div class="heat" aria-label="Consistency calendar, rows Monday to Sunday">${heatmap()}</div>
       <div class="muted tiny">Full square = training done + all meals + 3 habits.</div></section>
+    ${runCard()}
     <section class="card stack"><span class="eyebrow">Strength bests</span>${bRows ? `<div>${bRows}</div>` : '<div class="empty">Finish your first workout to see your bests.</div>'}</section>
     <button class="btn ghost" data-act="copy-summary">Copy weekly summary for your coach</button>
     <section class="card stack"><span class="eyebrow">History</span><div>${hist || '<div class="empty">No check-ins yet.</div>'}</div></section>
   </div>`;
+}
+function runs() {
+  const out = [];
+  for (const [key, s] of Object.entries(S.sessions)) {
+    const km = +s.km, min = +s.min;
+    if (km > 0 && min > 0) out.push({ date: key.split('|')[0], km, min, speed: km / (min / 60) });
+  }
+  return out.sort((a, b) => a.date < b.date ? -1 : 1);
+}
+function runCard() {
+  const rs = runs();
+  if (!rs.length) return '<section class="card stack"><span class="eyebrow">Running</span><div class="empty">Log your first run in Train — distance + time.</div></section>';
+  const t = parseKey(todayKey()), mk = keyOf(addDays(t, -((t.getDay() + 6) % 7)));
+  const week = rs.filter(r => r.date >= mk), wkKm = week.reduce((a, r) => a + r.km, 0);
+  const best = rs.filter(r => r.min >= 10).sort((a, b) => b.speed - a.speed)[0];
+  const byDay = {}; for (const r of rs) if (!byDay[r.date] || r.speed > byDay[r.date]) byDay[r.date] = r.speed;
+  const pts = Object.entries(byDay).map(([date, v]) => ({ date, v: Math.round(v * 10) / 10 }));
+  const rows = rs.slice(-5).reverse().map(r => `<div class="list-row"><span><b class="num">${shortDate(r.date)}</b> <span class="muted small">${fmt(r.km)} km · ${fmt(r.min)} min</span></span><span class="num">${fmt(r.speed)} km/h · ${pace(r.km, r.min)}/km</span></div>`).join('');
+  return `<section class="card stack"><div class="row between"><span class="eyebrow">Running</span><span class="muted tiny">target 12 km/h</span></div>
+    <div class="tiles">
+      <div class="tile"><span>This week</span><b>${fmt(wkKm)}<small style="font-size:14px"> km</small></b></div>
+      <div class="tile"><span>Runs</span><b>${week.length}</b></div>
+      <div class="tile"><span>Best (10+ min)</span><b>${best ? fmt(best.speed) : '–'}<small style="font-size:14px"> km/h</small></b></div>
+    </div>
+    <div class="chart">${chart(pts, { target: 12, unit: 'km/h', label: 'speed' })}</div>
+    <div>${rows}</div></section>`;
 }
 function saveCheckin() {
   const date = $('#ci-date').value, w = parseFloat($('#ci-weight').value), waist = parseFloat($('#ci-waist').value);
@@ -786,8 +832,8 @@ function summaryText() {
     const d = key.split('|')[0]; if (d < mk || !sessionCounts(d, s)) continue;
     const wo = workoutOf(s.w);
     lifts.push(`${DOW[parseKey(d).getDay()]} — ${wo.name} (${wo.focus})`);
+    if (s.km && s.min) lifts.push(`  Run: ${s.km} km in ${s.min} min (${pace(s.km, s.min)}/km, ${fmt(s.km / (s.min / 60))} km/h)`);
     if (wo.ex) for (const ex of wo.ex) { const a = (s.ex[ex.id] || []).filter(x => x.done); if (a.length) lifts.push(`  ${ex.n}: ${a.map(x => ex.bw ? x.r : `${x.kg}×${x.r}`).join(', ')}`); }
-    else if (s.km) lifts.push(`  ${s.km} km in ${s.min} min (${pace(s.km, s.min)}/km)`);
   }
   return [`Recomp check-in — week ${weekNo()} (${shortDate(mk)}–${shortDate(todayKey())})`,
     `Weight: ${last ? fmt(last.weight) + ' kg' : '—'}${last && prev ? ` (${last.weight - prev.weight <= 0 ? '−' : '+'}${fmt(Math.abs(last.weight - prev.weight))} vs ${shortDate(prev.date)})` : ''} · Waist: ${waist ? fmt(waist.waist) + ' cm' : '—'}`,
@@ -901,12 +947,13 @@ document.addEventListener('click', async e => {
   const d = t.dataset;
   if (d.act === 'scrim' && e.target !== t) return;
   switch (d.act) {
-    case 'tab': tab = d.tab; compareFrom = null; if (tab === 'train') trainSel = null; closeSheet(); render(); window.scrollTo(0, 0); break;
-    case 'go-train': tab = 'train'; trainSel = null; render(); window.scrollTo(0, 0); break;
+    case 'tab': tab = d.tab; compareFrom = null; logDate = todayKey(); if (tab === 'train') trainSel = null; closeSheet(); render(); window.scrollTo(0, 0); break;
+    case 'go-train': tab = 'train'; trainSel = null; logDate = todayKey(); render(); window.scrollTo(0, 0); break;
     case 'meal': { const r = dayRec(todayKey(), true); r.meals[+d.i] = !r.meals[+d.i]; save(); render(); break; }
     case 'habit': { const r = dayRec(todayKey(), true); r.habits[d.id] = !r.habits[d.id]; save(); render(); break; }
     case 'walk': { const r = dayRec(todayKey(), true); r.walk = !r.walk; save(); render(); if (r.walk) toast('Rest day done — streak kept 🔥'); break; }
     case 'pick-w': trainSel = d.w; render(); break;
+    case 'run-quick': { const s = getSession(currentW(), true); s.km = 2; s.min = 10; save(); render(); toast('Run logged · 12 km/h'); break; }
     case 'set': toggleSet(d.ex, +d.i); break;
     case 'step': { const s = getSession(currentW(), true); s.steps[+d.i] = !s.steps[+d.i]; save(); render(); break; }
     case 'round': { const s = getSession(currentW(), true), max = workoutOf(currentW()).steps.find(x => x.rounds).rounds; s.rounds = Math.max(0, Math.min(max, (s.rounds || 0) + +d.d)); save(); render(); break; }
@@ -937,15 +984,16 @@ document.addEventListener('change', e => {
   if (el.dataset.f) {
     const w = currentW(), ex = workoutOf(w).ex.find(x => x.id === el.dataset.ex), sess = getSession(w, true);
     ensureSets(sess, ex)[+el.dataset.i][el.dataset.f] = el.value; save();
-  } else if (el.dataset.cf) { const s = getSession(currentW(), true); s[el.dataset.cf] = el.value ? parseFloat(el.value) : ''; save(); const pl = $('#pace-line'); if (pl) pl.innerHTML = paceLine(s); }
+  } else if (el.dataset.cf) { const s = getSession(currentW(), true); s[el.dataset.cf] = el.value ? parseFloat(el.value) : ''; save(); const pl = $('#pace-line'); if (pl) pl.innerHTML = paceLine(s); if (s.km && s.min) { const q = $('[data-act="run-quick"]'); if (q) q.remove(); } }
   else if (el.id === 'photo-input') addPhoto(el.files[0]);
   else if (el.id === 'import-input') importData(el.files[0]);
+  else if (el.id === 'log-date') { logDate = el.value; trainSel = null; render(); }
   else if (el.id === 'set-start' && el.value) { S.start = el.value; save(); render(); toast('Start date updated'); }
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
 // Re-render when the app comes back after midnight
 let lastDay = todayKey();
-document.addEventListener('visibilitychange', () => { if (!document.hidden && todayKey() !== lastDay) { lastDay = todayKey(); trainSel = null; render(); } });
+document.addEventListener('visibilitychange', () => { if (!document.hidden && todayKey() !== lastDay) { lastDay = todayKey(); logDate = todayKey(); trainSel = null; render(); } });
 
 render();
 if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(() => {});
