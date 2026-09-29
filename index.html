@@ -281,9 +281,9 @@ const PLAN = {
     work: { name: 'Gym day menu', meals: [
       { t: '07:00', m: '250 g Greek yogurt 0% + 40 g oats + 1 fruit + 15 g walnuts — or breakfast shake: 250 ml oat milk + 1 scoop whey + 30 g oats + 1 small banana, walnuts on the side', k: 455, p: 32 },
       { t: '12:30', m: '150 g chicken + 100 g rice or pasta (dry) + 200 g vegetables + 1 tsp oil', k: 625, p: 45 },
-      { t: '17:00', m: '⚡ Pre-workout shake: 250 ml oat milk + 1 banana + 30 g oats + ½ scoop whey', k: 370, p: 20 },
-      { t: '20:45', m: '💪 Post-workout shake: 1 scoop whey + 5 g creatine + 300 ml cold water', k: 120, p: 24 },
-      { t: '21:00', m: '250 g white fish + 250 g potatoes + salad + 1 spoon oil (no bread, no late fruit)', k: 450, p: 42 },
+      { t: '17:00', m: '⚡ Pre-workout: first half (250 ml) of the shake — 300 ml oat milk + 1 banana + 1 scoop whey + 40 g oats + 15 g peanut butter, blended in the morning', k: 290, p: 18 },
+      { t: '20:45', m: '💪 Post-workout: second half (250 ml, from the fridge) + 5 g creatine', k: 290, p: 18 },
+      { t: '21:00', m: 'Quick dinner, 30+ g protein: 150 g prepped chicken or beef ragù + 150 g rice or potatoes + salad — or a lean beef burger (150 g macinato di manzo 5%), 2 tins tuna + potatoes, 3-egg omelette with 1 tin tuna, or 100 g bresaola + 2 slices bread', k: 400, p: 38 },
     ]},
     vegan: { name: 'Vegan menu · rest day', vegan: true, meals: [
       { t: '07:00', m: 'Breakfast shake: 300 ml oat milk + 1 scoop pea protein + 40 g oats + 1 banana + 5 g creatine', k: 485, p: 33 },
@@ -295,18 +295,18 @@ const PLAN = {
     veganGym: { name: 'Vegan menu · gym day', vegan: true, meals: [
       { t: '07:00', m: 'Breakfast shake: 300 ml oat milk + 1 scoop pea protein + 40 g oats + 1 banana', k: 485, p: 33 },
       { t: '12:30', m: '90 g red lentil pasta + 150 g passata + 150 g vegetables + 1 tsp oil', k: 440, p: 27 },
-      { t: '17:00', m: '⚡ Pre-workout shake: 250 ml oat milk + 1 banana + 30 g oats + ½ scoop pea protein', k: 370, p: 20 },
-      { t: '20:45', m: '💪 Post-workout shake: 1 scoop pea protein + 5 g creatine + 300 ml cold water', k: 115, p: 24 },
-      { t: '21:00', m: '60 g chickpea pasta + lentil ragù + salad with lemon (no soy yogurt later)', k: 570, p: 32 },
+      { t: '17:00', m: '⚡ Pre-workout: first half (250 ml) of the shake — 300 ml oat milk + 1 banana + 1 scoop pea protein + 40 g oats + 15 g peanut butter', k: 290, p: 18 },
+      { t: '20:45', m: '💪 Post-workout: second half (250 ml, from the fridge) + 5 g creatine', k: 285, p: 18 },
+      { t: '21:00', m: 'Quick dinner: lentil ragù from the freezer + 60 g chickpea pasta + salad with lemon', k: 450, p: 28 },
     ]},
     sat: { name: 'Weekend menu', meals: [
-      { t: '10:00', m: 'Omelette: 3 eggs + 100 g egg whites + spinach, 2 slices bread, 1 fruit', k: 480, p: 36 },
+      { t: '10:00', m: 'Omelette: 4 eggs + spinach, 2 slices bread, 1 fruit', k: 500, p: 32 },
       { t: '14:00', m: '2 tins tuna + 200 g boiled potatoes + big salad + 1 spoon oil', k: 440, p: 44 },
       { t: '17:00', m: 'Shake (post-run if you run in the afternoon): 1 scoop whey + 200 ml oat milk + 1 banana + ice + 5 g creatine', k: 300, p: 27 },
       { t: '21:00', m: 'Free meal: 1 pizza + water or 1 beer', k: 850, p: 35 },
     ]},
     sun: { name: 'Weekend menu', meals: [
-      { t: '10:00', m: 'Omelette: 3 eggs + 100 g egg whites + spinach, 2 slices bread, 1 fruit', k: 480, p: 36 },
+      { t: '10:00', m: 'Omelette: 4 eggs + spinach, 2 slices bread, 1 fruit', k: 500, p: 32 },
       { t: '14:00', m: '2 tins tuna + 200 g boiled potatoes + big salad + 1 spoon oil', k: 440, p: 44 },
       { t: '17:00', m: 'Shake (post-run if you run in the afternoon): 1 scoop whey + 200 ml oat milk + 1 banana + ice + 5 g creatine', k: 300, p: 27 },
       { t: '21:00', m: '200 g chicken or turkey + 80 g rice + vegetables + 1 tsp oil', k: 600, p: 51 },
@@ -331,7 +331,11 @@ const TIPS = [
   'Feeling very sore? Swap Saturday intervals for a 40 min incline walk.',
   'Sunday prep = an easy week. Chicken, rice, potatoes, lentil ragù.',
   'Creatine: 5 g every day, even rest days. The first weeks the scale may go up 0.5–1.5 kg — that’s water, not fat. Trust your waist.',
-  'Pre-workout shake: pack oats + powder dry in the morning, add oat milk at 17:00.',
+  'Blend the gym shake in the morning and split it into 2 bottles. The post-workout half waits in your fridge at home.',
+  'Peanut butter: 1 level spoon = 15 g = 90 kcal. Weigh it — a heaped spoon is double.',
+  'Too tired after the gym? Still eat the quick dinner. Skipping it = less muscle and more tiredness tomorrow.',
+  'Buy “macinato di manzo” (beef only) — “macinato misto” contains pork.',
+  'Sunday beef ragù: 500 g lean beef mince + passata + onion + carrot = 3 quick dinners.',
   'Whey is milk — on Wednesday and Friday use pea protein.',
   'Stop each set 1–2 reps before failure. Hard, but clean.',
 ];
@@ -491,7 +495,7 @@ function renderToday() {
       <button class="item ${rec.walk ? 'on' : ''}" data-act="walk" style="padding:0">
         <span class="grow"><span class="display h2" style="display:block">Rest day</span><span class="muted small">20–30 min easy walk · recovery builds the muscle</span></span>
         <span class="check">${CHECK}</span></button>
-      <div class="muted small">Evening prep: boil 6 eggs · put oats + pea protein in a bottle for Friday’s 17:00 shake.</div></section>`;
+      <div class="muted small">Evening prep: boil 6 eggs · move Friday’s lentil ragù from the freezer to the fridge.</div></section>`;
   } else {
     const w = workoutOf(plan.w);
     const meta = w.ex ? `${w.ex.length} exercises · about 60 min` : `${w.steps.length} steps · about 35 min`;
