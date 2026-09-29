@@ -605,7 +605,7 @@ function renderTrain() {
     ${past ? `<div class="banner">Logging a past day: ${DOW[parseKey(logDate).getDay()]} ${shortDate(logDate)}</div>` : ''}
     <div class="chips">${chips}</div>
     ${restNote}
-    ${wo.ex ? `<div class="card flat small"><b>Warm-up:</b> 5 min walk at 6 km/h → <b>10 min run at 12 km/h</b> → 10 squats + 10 push-ups. Stop each set 1–2 reps before failure.</div>${runBlock(sess, true)}` : ''}
+    ${wo.ex ? warmupCard(sess) : ''}
     ${body}
     ${wo.finisher ? `<div class="muted small" style="padding:0 4px">${wo.finisher}</div>` : ''}
     <button class="btn" data-act="finish">${sess && sess.finished ? 'Finished ✓ — save changes' : 'Finish workout'}</button>
@@ -622,6 +622,29 @@ function runBlock(sess, gym) {
     ${gym && !logged ? '<button class="btn ghost" data-act="run-quick">Done as planned · 2.0 km in 10 min</button>' : ''}
     <div class="muted small" id="pace-line">${paceLine(sess)}</div>
   </section>`;
+}
+function warmupCard(sess) {
+  const wu = (sess && sess.warm) || [], ran = !!(sess && sess.km && sess.min), n = (wu[0] ? 1 : 0) + (ran ? 1 : 0) + (wu[2] ? 1 : 0);
+  const item = (i, title, sub, on) => `<button class="item ${on ? 'on' : ''}" data-act="warm" data-i="${i}"><span class="grow"><b style="font-weight:600">${title}</b><br><span class="muted small num">${sub}</span></span><span class="check">${CHECK}</span></button>`;
+  return `<section class="card stack">
+    <div class="row between"><span class="eyebrow">Warm-up</span><span class="pill ${n === 3 ? 'good' : ''}" id="warm-count">${n} / 3</span></div>
+    <div>
+      ${item(0, 'Walk', '5 min · 6 km/h', wu[0])}
+      ${item(1, 'Run', '10 min · 12 km/h · tap = done as planned (2.0 km)', ran)}
+      <div class="grid2" style="padding-bottom:8px">
+        <label class="field">Distance (km)<input type="number" inputmode="decimal" step="0.01" id="cf-km" data-cf="km" value="${(sess && sess.km) || ''}" placeholder="2.0"></label>
+        <label class="field">Time (min)<input type="number" inputmode="decimal" step="0.1" id="cf-min" data-cf="min" value="${(sess && sess.min) || ''}" placeholder="10"></label>
+      </div>
+      <div class="muted small" id="pace-line" style="padding-bottom:12px">${paceLine(sess)}</div>
+      ${item(2, '10 squats + 10 push-ups', 'body weight', wu[2])}
+    </div>
+    <div class="muted small">Then the weights. Stop each set 1–2 reps before failure.</div>
+  </section>`;
+}
+function refreshWarm(s) {
+  const ran = !!(s.km && s.min), wu = s.warm || [], n = (wu[0] ? 1 : 0) + (ran ? 1 : 0) + (wu[2] ? 1 : 0);
+  const b = $('[data-act="warm"][data-i="1"]'); if (b) b.classList.toggle('on', ran);
+  const c = $('#warm-count'); if (c) { c.textContent = `${n} / 3`; c.classList.toggle('good', n === 3); }
 }
 function dayOptions() {
   return Array.from({ length: 7 }, (_, i) => {
@@ -953,6 +976,14 @@ document.addEventListener('click', async e => {
     case 'habit': { const r = dayRec(todayKey(), true); r.habits[d.id] = !r.habits[d.id]; save(); render(); break; }
     case 'walk': { const r = dayRec(todayKey(), true); r.walk = !r.walk; save(); render(); if (r.walk) toast('Rest day done — streak kept 🔥'); break; }
     case 'pick-w': trainSel = d.w; render(); break;
+    case 'warm': {
+      const s = getSession(currentW(), true), i = +d.i;
+      if (i === 1) {
+        if (s.km && s.min) { s.km = ''; s.min = ''; }
+        else { s.km = +($('#cf-km') && $('#cf-km').value) || 2; s.min = +($('#cf-min') && $('#cf-min').value) || 10; toast(`Run logged · ${fmt(s.km / (s.min / 60))} km/h`); }
+      } else { s.warm = s.warm || []; s.warm[i] = !s.warm[i]; }
+      save(); render(); break;
+    }
     case 'run-quick': { const s = getSession(currentW(), true); s.km = 2; s.min = 10; save(); render(); toast('Run logged · 12 km/h'); break; }
     case 'set': toggleSet(d.ex, +d.i); break;
     case 'step': { const s = getSession(currentW(), true); s.steps[+d.i] = !s.steps[+d.i]; save(); render(); break; }
@@ -984,7 +1015,7 @@ document.addEventListener('change', e => {
   if (el.dataset.f) {
     const w = currentW(), ex = workoutOf(w).ex.find(x => x.id === el.dataset.ex), sess = getSession(w, true);
     ensureSets(sess, ex)[+el.dataset.i][el.dataset.f] = el.value; save();
-  } else if (el.dataset.cf) { const s = getSession(currentW(), true); s[el.dataset.cf] = el.value ? parseFloat(el.value) : ''; save(); const pl = $('#pace-line'); if (pl) pl.innerHTML = paceLine(s); if (s.km && s.min) { const q = $('[data-act="run-quick"]'); if (q) q.remove(); } }
+  } else if (el.dataset.cf) { const s = getSession(currentW(), true); s[el.dataset.cf] = el.value ? parseFloat(el.value) : ''; save(); const pl = $('#pace-line'); if (pl) pl.innerHTML = paceLine(s); if (s.km && s.min) { const q = $('[data-act="run-quick"]'); if (q) q.remove(); } refreshWarm(s); }
   else if (el.id === 'photo-input') addPhoto(el.files[0]);
   else if (el.id === 'import-input') importData(el.files[0]);
   else if (el.id === 'log-date') { logDate = el.value; trainSel = null; render(); }
