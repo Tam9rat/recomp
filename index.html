@@ -86,6 +86,8 @@ h1,h2,h3{margin:0;text-wrap:balance}
 /* lists */
 .item{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line);cursor:pointer;background:none;border-left:0;border-right:0;border-bottom:0;width:100%;text-align:left}
 .item:first-child{border-top:0}
+.item:disabled{cursor:default;opacity:.7}
+div.item{cursor:default}
 .check{width:30px;height:30px;border-radius:10px;border:2px solid var(--line);display:grid;place-items:center;flex:none;transition:background .15s,border-color .15s}
 .check svg{opacity:0;transform:scale(.6);transition:.15s}
 .on>.check,.check.on{background:var(--good);border-color:var(--good);color:#fff}
@@ -318,6 +320,15 @@ const PLAN = {
     ]},
   },
 };
+const GYM_BAG = 'Gym bag: shoes, towel, water bottle, creatine';
+const PREP = {
+  gymEggs: ['Lunch box in the fridge (chicken + rice + vegetables)', 'Breakfast: 3 boiled eggs + bread + milk', 'Shake stuff ready: oat milk, banana, whey, oats, peanut butter + 2 bottles — blend in the morning', 'Quick dinner ready: beef ragù or a chicken portion', GYM_BAG],
+  gymYogurt: ['Lunch box in the fridge (chicken + rice + vegetables)', 'Breakfast: Greek yogurt + oats + fruit + 2 boiled eggs', 'Shake stuff ready: oat milk, banana, whey, oats, peanut butter + 2 bottles — blend in the morning', 'Quick dinner ready: beef ragù or a chicken portion', GYM_BAG],
+  vegan: ['🌱 Vegan day — no eggs, milk, yogurt or whey', 'Breakfast shaker: oat milk + pea protein + oats + banana', 'Lentil pasta lunch box — move it from the freezer to the fridge tonight', 'Roasted chickpeas + apple for 17:00', 'Dinner: lentil ragù + chickpea pasta · soy yogurt'],
+  sat: ['Pancake ingredients: oats, 2 eggs, banana, whey, milk', GYM_BAG + ' (gym in the morning)', 'After-gym shake: whey, oat milk, banana', 'Lunch box in the fridge', 'Pizza night 🍕 — one pizza, enjoy it'],
+  sun: ['Breakfast: Saturday’s pancakes in the fridge (or yogurt + 2 boiled eggs)', 'Running shoes ready', 'Shopping done for Sunday prep (see the Sunday prep list)'],
+};
+const SUNDAY_PREP = ['Boil 8–10 eggs (keep unpeeled in the fridge)', '5 lunch boxes: 750 g chicken + 400 g rice (dry) + frozen vegetables', 'Beef ragù: 500 g macinato di manzo + passata + onion + carrot', '2 red lentil pasta boxes — Wednesday in the fridge, Friday in the freezer', 'Lentil ragù for Wednesday + Friday dinners', 'Roasted chickpeas for Wednesday', 'Check-in: weight + waist in Progress'];
 const HABITS = [
   { id: 'creatine', n: 'Creatine 5 g' },
   { id: 'water', n: 'Water 2.5–3 L' },
@@ -471,7 +482,7 @@ let sheetUrls = [];
 const sheetUrl = blob => { const u = URL.createObjectURL(blob); sheetUrls.push(u); return u; };
 function closeSheet() { $('#sheet-root').innerHTML = ''; sheetUrls.forEach(u => URL.revokeObjectURL(u)); sheetUrls = []; }
 const view = $('#view');
-let tab = 'today', trainSel = null, photoPose = 'Front', compareFrom = null, logDate = todayKey();
+let tab = 'today', trainSel = null, photoPose = 'Front', compareFrom = null, logDate = todayKey(), viewOff = 0;
 const urls = new Map();
 
 function render() {
@@ -493,17 +504,26 @@ function weekDots() {
     return `<div class="dot ${cls} ${isT ? 'today' : ''}" title="${DOW[d.getDay()]}">${l}</div>`;
   }).join('');
 }
+function checklist(items, k, field, act) {
+  const done = (dayRec(k)[field] || []);
+  return items.map((t, i) => `<button class="item ${done[i] ? 'on' : ''}" data-act="${act}" data-k="${k}" data-i="${i}"><span class="grow small">${t}</span><span class="check">${CHECK}</span></button>`).join('');
+}
 function renderToday() {
-  const k = todayKey(), now = parseKey(k), plan = planFor(k), rec = dayRec(k), menu = PLAN.menus[plan.menu], st = dayStatus(k);
+  const today = todayKey(), k = keyOf(addDays(parseKey(today), viewOff)), future = viewOff > 0;
+  const now = parseKey(k), plan = planFor(k), rec = dayRec(k), menu = PLAN.menus[plan.menu], st = dayStatus(k);
+  const tomorrow = keyOf(addDays(parseKey(today), 1)), tPlan = planFor(tomorrow);
   const s = streak(), next = [3, 7, 14, 30, 60, 90, 180, 365].find(m => m > s) || s + 1;
   const pre = k < S.start;
-  const wk = pre ? `Starts ${shortDate(S.start)}` : `Week ${weekNo()} of ${GOAL.weeks}${learning() ? ' · learning phase' : ''}`;
+  const wk = future ? (viewOff === 1 ? 'Tomorrow · plan ahead' : `In ${viewOff} days · plan ahead`) : pre ? `Starts ${shortDate(S.start)}` : `Week ${weekNo()} of ${GOAL.weeks}${learning() ? ' · learning phase' : ''}`;
+  const dayChips = Array.from({ length: 7 }, (_, i) => { const d = addDays(parseKey(today), i);
+    return `<button class="chip" data-act="view-day" data-off="${i}" aria-pressed="${i === viewOff}">${i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : DOW[d.getDay()].slice(0, 3)}</button>`; }).join('');
+  const label = future ? `${DOW[now.getDay()]}’s` : 'Today’s';
 
   let training;
   if (plan.kind === 'rest') {
     training = `<section class="card stack">
-      <div class="eyebrow">Today’s training</div>
-      <button class="item ${rec.walk ? 'on' : ''}" data-act="walk" style="padding:0">
+      <div class="eyebrow">${label} training</div>
+      <button class="item ${rec.walk ? 'on' : ''}" data-act="walk" style="padding:0" ${future ? 'disabled' : ''}>
         <span class="grow"><span class="display h2" style="display:block">Rest day</span><span class="muted small">20–30 min easy walk · recovery builds the muscle</span></span>
         <span class="check">${CHECK}</span></button>
       ${plan.note ? `<div class="muted small">${plan.note}</div>` : ''}</section>`;
@@ -511,18 +531,28 @@ function renderToday() {
     const w = workoutOf(plan.w);
     const meta = w.ex ? `${w.ex.length} exercises · about 60 min` : `${w.steps.length} steps · about 35 min`;
     training = `<section class="card stack">
-      <div class="row between"><span class="eyebrow">Today’s training</span>${st.trained ? '<span class="pill good">Done ✓</span>' : `<span class="pill accent">${plan.time || 'Any time'}</span>`}</div>
+      <div class="row between"><span class="eyebrow">${label} training</span>${st.trained ? '<span class="pill good">Done ✓</span>' : `<span class="pill accent">${plan.time || 'Any time'}</span>`}</div>
       <div><div class="display h2">${w.name}</div><div class="muted">${w.focus} · ${meta}</div></div>
-      <button class="btn ${st.trained ? 'ghost' : ''}" data-act="go-train">${st.trained ? 'View workout' : 'Start workout'}
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      ${future ? `<div class="muted small">${w.ex ? 'Warm-up: 5 min walk + 10 min run at 12 km/h. ' : ''}${w.ex ? w.ex.map(e => e.n).join(' · ') : w.steps.map(x => x.n).join(' · ')}</div>` : `<button class="btn ${st.trained ? 'ghost' : ''}" data-act="go-train">${st.trained ? 'View workout' : 'Start workout'}
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>`}
     </section>`;
   }
 
   const eaten = menu.meals.reduce((a, m, i) => a + (rec.meals[i] ? m.k : 0), 0);
   const prot = menu.meals.reduce((a, m, i) => a + (rec.meals[i] ? m.p : 0), 0);
   const kTot = menu.meals.reduce((a, m) => a + m.k, 0), pTot = menu.meals.reduce((a, m) => a + m.p, 0);
-  const meals = menu.meals.map((m, i) => `<button class="item ${rec.meals[i] ? 'on' : ''}" data-act="meal" data-i="${i}">
+  const meals = menu.meals.map((m, i) => future
+    ? `<div class="item"><span class="time">${m.t}</span><span class="grow small">${m.m}<br><span class="tiny muted num">${m.k} kcal · ${m.p} g protein</span></span></div>`
+    : `<button class="item ${rec.meals[i] ? 'on' : ''}" data-act="meal" data-i="${i}">
       <span class="time">${m.t}</span><span class="grow meal-text small">${m.m}<br><span class="tiny muted num">${m.k} kcal · ${m.p} g protein</span></span><span class="check">${CHECK}</span></button>`).join('');
+  const prepCard = future ? `<section class="card stack"><div class="row between"><span class="eyebrow">${viewOff === 1 ? 'Prepare tonight' : 'Prepare the evening before'}</span><span class="muted tiny">for ${DOW[now.getDay()]}</span></div>
+      <div>${checklist(PREP[plan.menu] || [], k, 'prep', 'prep')}</div></section>` : '';
+  const sundayCard = now.getDay() === 0 ? `<section class="card stack"><div class="row between"><span class="eyebrow">Sunday prep · about 1 hour</span><span class="muted tiny">covers the week</span></div>
+      <div>${checklist(SUNDAY_PREP, k, 'sprep', 'sprep')}</div></section>` : '';
+  const tw = tPlan.kind === 'rest' ? 'Rest day' : workoutOf(tPlan.w).name;
+  const tomorrowCard = !future ? `<button class="card row between" data-act="view-day" data-off="1" style="text-align:left;cursor:pointer;width:100%;font:inherit;color:inherit">
+      <span><span class="eyebrow">Tomorrow · ${DOW[parseKey(tomorrow).getDay()]}</span><br><b>${tw}</b> <span class="muted small">· ${PLAN.menus[tPlan.menu].name}</span><br><span class="muted small">See the food and what to prepare tonight</span></span>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>` : '';
   const habits = HABITS.map(h => `<button class="habit ${rec.habits[h.id] ? 'on' : ''}" data-act="habit" data-id="${h.id}"><span class="check">${CHECK}</span>${h.n}</button>`).join('');
 
   const sunday = now.getDay() === 0 && !S.checkins.some(c => daysBetween(c.date, k) < 6 && daysBetween(c.date, k) >= 0 && c.date >= S.start);
@@ -541,18 +571,21 @@ function renderToday() {
       </div>
     </header>
     <div class="week" aria-label="This week">${weekDots()}</div>
-    ${sunday ? `<button class="banner" data-act="tab" data-tab="progress" style="border:0;text-align:left;cursor:pointer">Sunday check-in → log your weight + waist</button>` : ''}
+    <div class="chips" aria-label="Choose a day">${dayChips}</div>
+    ${sunday && !future ? `<button class="banner" data-act="tab" data-tab="progress" style="border:0;text-align:left;cursor:pointer">Sunday check-in → log your weight + waist</button>` : ''}
     ${training}
     <section class="card stack">
       <div class="row between"><span class="eyebrow">${menu.name}</span>${menu.vegan ? '<span class="pill good">🌱 Vegan day</span>' : ''}</div>
-      <div class="grid2">
+      ${future ? `<div class="muted small num">${kTot} kcal · ${pTot} g protein</div>` : `<div class="grid2">
         <div class="stack" style="gap:6px"><div class="row between small"><span class="muted">Calories</span><span class="num">${eaten} / ${kTot}</span></div><div class="bar"><i style="width:${Math.min(100, eaten / kTot * 100)}%"></i></div></div>
         <div class="stack" style="gap:6px"><div class="row between small"><span class="muted">Protein</span><span class="num">${prot} / ${pTot} g</span></div><div class="bar good"><i style="width:${Math.min(100, prot / pTot * 100)}%"></i></div></div>
-      </div>
+      </div>`}
       <div>${meals}</div>
     </section>
+    ${prepCard}${sundayCard}
+    ${future ? `<button class="btn ghost" data-act="view-day" data-off="0">Back to today</button>` : `${tomorrowCard}
     <section class="stack" style="gap:10px"><span class="eyebrow">Daily habits</span><div class="habits">${habits}</div></section>
-    <section class="card flat small"><span class="eyebrow">Coach tip</span><div style="margin-top:6px">${tip}</div></section>
+    <section class="card flat small"><span class="eyebrow">Coach tip</span><div style="margin-top:6px">${tip}</div></section>`}
   </div>`;
 }
 
@@ -970,7 +1003,9 @@ document.addEventListener('click', async e => {
   const d = t.dataset;
   if (d.act === 'scrim' && e.target !== t) return;
   switch (d.act) {
-    case 'tab': tab = d.tab; compareFrom = null; logDate = todayKey(); if (tab === 'train') trainSel = null; closeSheet(); render(); window.scrollTo(0, 0); break;
+    case 'tab': tab = d.tab; compareFrom = null; logDate = todayKey(); viewOff = 0; if (tab === 'train') trainSel = null; closeSheet(); render(); window.scrollTo(0, 0); break;
+    case 'view-day': viewOff = +d.off; render(); window.scrollTo(0, 0); break;
+    case 'prep': case 'sprep': { const f = d.act, r = dayRec(d.k, true); r[f] = r[f] || []; r[f][+d.i] = !r[f][+d.i]; save(); render(); break; }
     case 'go-train': tab = 'train'; trainSel = null; logDate = todayKey(); render(); window.scrollTo(0, 0); break;
     case 'meal': { const r = dayRec(todayKey(), true); r.meals[+d.i] = !r.meals[+d.i]; save(); render(); break; }
     case 'habit': { const r = dayRec(todayKey(), true); r.habits[d.id] = !r.habits[d.id]; save(); render(); break; }
@@ -1024,7 +1059,7 @@ document.addEventListener('change', e => {
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
 // Re-render when the app comes back after midnight
 let lastDay = todayKey();
-document.addEventListener('visibilitychange', () => { if (!document.hidden && todayKey() !== lastDay) { lastDay = todayKey(); logDate = todayKey(); trainSel = null; render(); } });
+document.addEventListener('visibilitychange', () => { if (!document.hidden && todayKey() !== lastDay) { lastDay = todayKey(); logDate = todayKey(); viewOff = 0; trainSel = null; render(); } });
 
 render();
 if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(() => {});
