@@ -381,7 +381,10 @@ const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); r
 const shortDate = k => { const d = parseKey(k); return `${d.getDate()} ${MON[d.getMonth()]}`; };
 const fmt = n => (Math.round(n * 10) / 10).toString();
 // Accepts "2,1" (Italian keyboard) as well as "2.1"
-const num = v => { const x = parseFloat(String(v ?? '').trim().replace(',', '.')); return isFinite(x) ? x : NaN; };
+const num = v => { const t = String(v ?? '').trim().replace(',', '.'); return /^\d+(\.\d+)?$/.test(t) ? parseFloat(t) : NaN; };
+// Clean a typed value for a set: kg (0.5–400, decimals ok) or reps/seconds (whole number 1–600)
+const cleanKg = v => { const x = num(v); return x > 0 && x <= 400 ? String(Math.round(x * 100) / 100) : ''; };
+const cleanReps = v => { const x = num(v); return x >= 1 && x <= 600 ? String(Math.round(x)) : ''; };
 const daysBetween = (a, b) => Math.round((parseKey(b) - parseKey(a)) / 864e5);
 const CHECK = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 
@@ -705,7 +708,7 @@ function ensureSets(sess, ex) {
 function toggleSet(exId, i) {
   const w = currentW(), wo = workoutOf(w), ex = wo.ex.find(e => e.id === exId), sess = getSession(w, true), arr = ensureSets(sess, ex), row = arr[i];
   const kgEl = $(`input[data-ex="${exId}"][data-i="${i}"][data-f="kg"]`), rEl = $(`input[data-ex="${exId}"][data-i="${i}"][data-f="r"]`);
-  if (kgEl) row.kg = kgEl.value.trim().replace(',', '.'); if (rEl) row.r = rEl.value.trim();
+  if (kgEl) row.kg = cleanKg(kgEl.value); if (rEl) row.r = cleanReps(rEl.value);
   if (!row.done) {
     const sug = suggest(ex, lastSets(exId, logDate));
     const prevKg = i > 0 ? arr[i - 1].kg : '';
@@ -875,7 +878,10 @@ function runCard() {
 }
 function saveCheckin() {
   const date = $('#ci-date').value, w = num($('#ci-weight').value), waist = num($('#ci-waist').value);
-  if (!date || (!(w > 0) && !(waist > 0))) { toast('Enter your weight or waist first'); return; }
+  const wTxt = $('#ci-weight').value.trim(), waTxt = $('#ci-waist').value.trim();
+  if (!date || (!wTxt && !waTxt)) { toast('Enter your weight or waist first'); return; }
+  if (wTxt && !(w >= 35 && w <= 200)) { toast(`${wTxt} kg looks wrong — check the number (like 78.4)`); return; }
+  if (waTxt && !(waist >= 50 && waist <= 160)) { toast(`${waTxt} cm looks wrong — measure at the belly button (like 94)`); return; }
   const i = S.checkins.findIndex(c => c.date === date);
   const c = i >= 0 ? S.checkins[i] : { date };
   if (w > 0) c.weight = w; if (waist > 0) c.waist = waist;
@@ -1057,7 +1063,9 @@ document.addEventListener('change', e => {
   const el = e.target;
   if (el.dataset.f) {
     const w = currentW(), ex = workoutOf(w).ex.find(x => x.id === el.dataset.ex), sess = getSession(w, true);
-    ensureSets(sess, ex)[+el.dataset.i][el.dataset.f] = el.value.trim().replace(',', '.'); save();
+    const f = el.dataset.f, v = f === 'kg' ? cleanKg(el.value) : cleanReps(el.value);
+    if (el.value.trim() && !v) toast(f === 'kg' ? 'Use a number for kg, like 12.5' : 'Use a whole number, like 10');
+    ensureSets(sess, ex)[+el.dataset.i][f] = v; el.value = v; save();
   } else if (el.dataset.cf) { const s = getSession(currentW(), true); const v = num(el.value); s[el.dataset.cf] = v > 0 ? v : ''; save();
     if (s.km && s.min && s.km / (s.min / 60) > 25) toast(`That’s ${fmt(s.km / (s.min / 60))} km/h — check the distance (2.1, not 21)`); const pl = $('#pace-line'); if (pl) pl.innerHTML = paceLine(s); if (s.km && s.min) { const q = $('[data-act="run-quick"]'); if (q) q.remove(); } refreshWarm(s); }
   else if (el.id === 'photo-input') addPhoto(el.files[0]);
