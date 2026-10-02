@@ -269,6 +269,11 @@ const PLAN = {
       { n: 'Side plank', d: '2 × 30 s per side' },
       { n: 'Dead bug', d: '3 × 10 per side' },
     ]},
+    FOOT: { name: 'Football', focus: '⚽ instead of the Sunday run', finisher: 'Legs heavy on Monday? Keep last week’s weights and run at 11 km/h.', steps: [
+      { n: 'Warm-up: 5–10 min jog + leg swings + 3 short sprints', d: 'before kick-off' },
+      { n: 'Play', d: 'log your minutes below' },
+      { n: 'Stretch: hamstrings, quads, hip flexors, calves', d: '10 min after' },
+    ]},
     SUN: { name: 'Steady run', focus: '+ core + stretching', finisher: 'Tired? 40 min incline walk instead. Goal: 5 km in about 27 min, later under 25 min.', steps: [
       { n: 'Warm-up walk', d: '5 min · 6 km/h' },
       { n: 'Steady run · 10.5–11 km/h · incline 1%', d: '25–27 min (5 km)' },
@@ -318,9 +323,9 @@ const PLAN = {
       { t: '21:00', m: '🍕 Free meal: 1 pizza + water or 1 beer', k: 850, p: 35 },
     ]},
     sun: { name: 'Sunday · run + prep', meals: [
-      { t: '09:00', m: '🥞 Pancakes from Saturday’s batch + 200 ml milk — or yogurt bowl + 2 boiled eggs', k: 490, p: 36 },
-      { t: '14:00', m: 'Lunch box: 150 g chicken + 80 g rice (dry) + frozen vegetables + 1 tsp oil', k: 555, p: 44 },
-      { t: '17:00', m: 'Shake (after the run): 1 scoop whey + 200 ml oat milk + 1 banana + ice + 5 g creatine', k: 300, p: 27 },
+      { t: '09:00', m: '🥞 Pancakes from Saturday’s batch + 200 ml milk — or yogurt bowl + 2 boiled eggs (⚽ football day: + 1 banana, 1.5–2 h before kick-off)', k: 490, p: 36 },
+      { t: '14:00', m: 'Lunch box: 150 g chicken + 80 g rice (dry) + frozen vegetables + 1 tsp oil (⚽ football day: + 50 g rice)', k: 555, p: 44 },
+      { t: '17:00', m: 'Shake (after the run or the match): 1 scoop whey + 200 ml oat milk + 1 banana + ice + 5 g creatine', k: 300, p: 27 },
       { t: '21:00', m: '200 g chicken or lean beef + 80 g rice + vegetables + 1 tsp oil', k: 600, p: 51 },
     ]},
   },
@@ -331,8 +336,13 @@ const PREP = {
   gymYogurt: ['Lunch box in the fridge (chicken + rice + vegetables)', 'Breakfast: Greek yogurt + oats + fruit + 2 boiled eggs', 'Shake stuff ready: oat milk, banana, whey, oats, peanut butter + 2 bottles — blend in the morning', 'Quick dinner ready: beef ragù or a chicken portion', GYM_BAG],
   vegan: ['🌱 Vegan day — no eggs, milk, yogurt or whey', 'Breakfast shaker: oat milk + pea protein + oats + banana', 'Lentil pasta lunch box — move it from the freezer to the fridge tonight', 'Roasted chickpeas + apple for 17:00', 'Dinner: lentil ragù + chickpea pasta · soy yogurt'],
   sat: ['Pancake ingredients: oats, 2 eggs, banana, whey, milk', GYM_BAG + ' — Saturday session is about 90 min, any time', 'After-gym shake: whey, oat milk, banana', 'Lunch box in the fridge', 'Pizza night 🍕 — one pizza, enjoy it'],
-  sun: ['Breakfast: Saturday’s pancakes in the fridge (or yogurt + 2 boiled eggs)', 'Running shoes ready', 'Shopping done for Sunday prep (see the Sunday prep list)'],
+  sun: ['Breakfast: Saturday’s pancakes in the fridge (or yogurt + 2 boiled eggs)', 'Running shoes ready — or ⚽ boots, shin pads and a water bottle', 'Shopping done for Sunday prep (see the Sunday prep list)'],
 };
+const EXTRA_PRESETS = [
+  { n: 'Banana', k: 100, p: 1 }, { n: 'Boiled egg', k: 70, p: 6 }, { n: 'Slice of bread', k: 75, p: 3 },
+  { n: 'Coffee with milk', k: 40, p: 2 }, { n: 'Cornetto', k: 250, p: 5 }, { n: 'Handful of nuts (20 g)', k: 120, p: 4 },
+  { n: 'Slice of pizza', k: 270, p: 11 }, { n: 'Coke 330 ml', k: 140, p: 0 }, { n: 'Beer 330 ml', k: 140, p: 1 },
+];
 const SUNDAY_PREP = ['Boil 8–10 eggs (keep unpeeled in the fridge)', '5 lunch boxes: 750 g chicken + 400 g rice (dry) + frozen vegetables', 'Beef ragù: 500 g macinato di manzo + passata + onion + carrot', '2 red lentil pasta boxes — Wednesday in the fridge, Friday in the freezer', 'Lentil ragù for Wednesday + Friday dinners', 'Roasted chickpeas for Wednesday', 'Check-in: weight + waist in Progress'];
 const HABITS = [
   { id: 'creatine', n: 'Creatine 5 g' },
@@ -438,6 +448,7 @@ function sessionCounts(k, s) {
     const done = Object.values(s.ex || {}).reduce((a, arr) => a + arr.filter(x => x.done).length, 0);
     return done >= planned / 2;
   }
+  if (s.played > 0) return true;
   return (s.steps || []).filter(Boolean).length >= wo.steps.length / 2;
 }
 const workoutOf = w => PLAN.workouts[w] || PLAN.cardio[w];
@@ -538,18 +549,32 @@ function renderToday() {
         <span class="check">${CHECK}</span></button>
       ${plan.note ? `<div class="muted small">${plan.note}</div>` : ''}</section>`;
   } else {
-    const w = workoutOf(plan.w);
+    const footToday = plan.w === 'SUN' && S.sessions[k + '|FOOT'];
+    const w = workoutOf(footToday ? 'FOOT' : plan.w);
     const meta = w.ex ? `${w.ex.length} exercises · about ${w.min || 60} min` : `${w.steps.length} steps · about 35 min`;
     training = `<section class="card stack">
       <div class="row between"><span class="eyebrow">${label} training</span>${st.trained ? '<span class="pill good">Done ✓</span>' : `<span class="pill accent">${plan.time || 'Any time'}</span>`}</div>
       <div><div class="display h2">${w.name}</div><div class="muted">${w.focus} · ${meta}</div></div>
       ${future ? `<div class="muted small">${w.ex ? 'Warm-up: 5 min walk + 10 min run at 12 km/h. ' : ''}${w.ex ? w.ex.map(e => e.n).join(' · ') : w.steps.map(x => x.n).join(' · ')}</div>` : `<button class="btn ${st.trained ? 'ghost' : ''}" data-act="go-train">${st.trained ? 'View workout' : 'Start workout'}
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>`}
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>${plan.w === 'SUN' && !st.trained && !footToday ? '<button class="btn ghost" data-act="go-foot">⚽ Playing football instead</button>' : ''}`}
     </section>`;
   }
 
-  const eaten = menu.meals.reduce((a, m, i) => a + (rec.meals[i] ? m.k : 0), 0);
-  const prot = menu.meals.reduce((a, m, i) => a + (rec.meals[i] ? m.p : 0), 0);
+  const extras = rec.extra || [];
+  const eaten = menu.meals.reduce((a, m, i) => a + (rec.meals[i] ? m.k : 0), 0) + extras.reduce((a, e) => a + e.k, 0);
+  const prot = menu.meals.reduce((a, m, i) => a + (rec.meals[i] ? m.p : 0), 0) + extras.reduce((a, e) => a + e.p, 0);
+  const extraCard = future ? '' : `<section class="card stack">
+      <div class="row between"><span class="eyebrow">Extra food</span><span class="muted tiny">anything not in the plan</span></div>
+      ${extras.length ? `<div>${extras.map((e, i) => `<div class="list-row"><span>${e.n}</span><span class="row" style="gap:6px"><span class="num">${e.k} kcal · ${fmt(e.p)} g</span><button class="x-btn" data-act="extra-del" data-i="${i}" aria-label="Remove ${e.n}">✕</button></span></div>`).join('')}</div>` : ''}
+      <div class="chips">${EXTRA_PRESETS.map((x, i) => `<button class="chip" data-act="extra-preset" data-i="${i}">+ ${x.n}</button>`).join('')}</div>
+      <div class="grid3">
+        <label class="field">Food<input type="text" id="ex-n" autocomplete="off" placeholder="e.g. cake"></label>
+        <label class="field">kcal<input type="text" inputmode="numeric" autocomplete="off" id="ex-k" placeholder="200"></label>
+        <label class="field">Protein g<input type="text" inputmode="decimal" autocomplete="off" id="ex-p" placeholder="0"></label>
+      </div>
+      <button class="btn ghost" data-act="extra-add">Add extra food</button>
+      <div class="muted tiny">Not sure of the kcal? Check the label (per portion), or guess — a rough number is better than nothing.</div>
+    </section>`;
   const kTot = menu.meals.reduce((a, m) => a + m.k, 0), pTot = menu.meals.reduce((a, m) => a + m.p, 0);
   const meals = menu.meals.map((m, i) => future
     ? `<div class="item"><span class="time">${m.t}</span><span class="grow small">${m.m}<br><span class="tiny muted num">${m.k} kcal · ${m.p} g protein</span></span></div>`
@@ -587,12 +612,12 @@ function renderToday() {
     <section class="card stack">
       <div class="row between"><span class="eyebrow">${menu.name}</span>${menu.vegan ? '<span class="pill good">🌱 Vegan day</span>' : ''}</div>
       ${future ? `<div class="muted small num">${kTot} kcal · ${pTot} g protein</div>` : `<div class="grid2">
-        <div class="stack" style="gap:6px"><div class="row between small"><span class="muted">Calories</span><span class="num">${eaten} / ${kTot}</span></div><div class="bar"><i style="width:${Math.min(100, eaten / kTot * 100)}%"></i></div></div>
+        <div class="stack" style="gap:6px"><div class="row between small"><span class="muted">Calories</span><span class="num" style="${eaten > kTot ? 'color:var(--warn)' : ''}">${eaten} / ${kTot}</span></div><div class="bar"><i style="width:${Math.min(100, eaten / kTot * 100)}%"></i></div></div>
         <div class="stack" style="gap:6px"><div class="row between small"><span class="muted">Protein</span><span class="num">${prot} / ${pTot} g</span></div><div class="bar good"><i style="width:${Math.min(100, prot / pTot * 100)}%"></i></div></div>
       </div>`}
       <div>${meals}</div>
     </section>
-    ${prepCard}${sundayCard}
+    ${extraCard}${prepCard}${sundayCard}
     ${future ? `<button class="btn ghost" data-act="view-day" data-off="0">Back to today</button>` : `${tomorrowCard}
     <section class="stack" style="gap:10px"><span class="eyebrow">Daily habits</span><div class="habits">${habits}</div></section>
     <section class="card flat small"><span class="eyebrow">Coach tip</span><div style="margin-top:6px">${tip}</div></section>`}
@@ -600,10 +625,11 @@ function renderToday() {
 }
 
 /* ================= TRAIN ================= */
+function footSel() { const k = todayKey(); return planFor(k).w === 'SUN' && S.sessions[k + '|FOOT'] ? 'FOOT' : null; }
 function currentW() { const p = planFor(logDate); return trainSel || p.w || 'A'; }
 function renderTrain() {
   const p = planFor(logDate), w = currentW(), wo = workoutOf(w), sess = getSession(w, false), past = logDate !== todayKey();
-  const chips = [['A','A · Legs'],['B','B · Upper'],['C','C · Full'],['D','D · Arms'],['SAT','Intervals'],['SUN','Sun run']]
+  const chips = [['A','A · Legs'],['B','B · Upper'],['C','C · Full'],['D','D · Arms'],['SAT','Intervals'],['SUN','Sun run'],['FOOT','⚽ Football']]
     .map(([id, l]) => `<button class="chip" data-act="pick-w" data-w="${id}" aria-pressed="${id === w}">${l}${p.w === id ? '<span class="today-mark" title="Today"></span>' : ''}</button>`).join('');
   const restNote = p.kind === 'rest' && !trainSel ? `<div class="banner">${DOW[parseKey(logDate).getDay()]} is your rest day — walk 20–30 min. Pick a workout above only if you’re making one up.</div>` : '';
   let body = '';
@@ -637,7 +663,9 @@ function renderTrain() {
       return `<div style="padding:12px 0;border-top:${i ? '1px solid var(--line)' : '0'}">
         <button class="item ${on ? 'on' : ''}" data-act="step" data-i="${i}" style="padding:0;border:0"><span class="grow"><b style="font-weight:600">${st.n}</b><br><span class="muted small num">${st.d}</span></span><span class="check">${CHECK}</span></button>${rounds}</div>`;
     }).join('');
-    body = `<section class="card">${steps}</section>${runBlock(sess, false)}`;
+    body = `<section class="card">${steps}</section>${w === 'FOOT' ? `<section class="card stack"><div class="row between"><span class="eyebrow">Match</span>${sess && sess.played ? '<span class="pill good">Logged ✓</span>' : ''}</div>
+        <label class="field">Minutes played<input type="text" inputmode="numeric" autocomplete="off" id="cf-played" data-cf="played" value="${(sess && sess.played) || ''}" placeholder="60"></label>
+        <div class="muted small">First games after a long break: 45–60 min. Football burns about 500–800 kcal.</div></section>` : runBlock(sess, false)}`;
   }
   view.innerHTML = `<div class="stack">
     <header class="stack" style="gap:6px">
@@ -731,7 +759,7 @@ function finish() {
   openSheet(`<div class="celebrate">
     <div class="medal">${sparks}<svg viewBox="0 0 120 120" aria-hidden="true"><circle class="ring" cx="60" cy="60" r="54" fill="none" stroke="var(--accent)" stroke-width="8" stroke-linecap="round" transform="rotate(-90 60 60)"/><path class="tick" d="M40 62l14 14 28-30" fill="none" stroke="var(--accent)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     <h2 class="display h2">${wo.name} done</h2>
-    <div class="muted">${wo.ex ? `${sets} sets · <span class="num">${Math.round(vol).toLocaleString('en')}</span> kg lifted${sess.km ? ` · ${sess.km} km run` : ''}` : (sess.km ? `${sess.km} km in ${sess.min} min` : 'Cardio complete')}</div>
+    <div class="muted">${wo.ex ? `${sets} sets · <span class="num">${Math.round(vol).toLocaleString('en')}</span> kg lifted${sess.km ? ` · ${sess.km} km run` : ''}` : (sess.km ? `${sess.km} km in ${sess.min} min` : sess.played ? `${sess.played} min of football ⚽` : 'Cardio complete')}</div>
     <div class="pill accent" style="font-size:14px">🔥 ${s}-day streak</div>
     <button class="btn" data-act="close" style="margin-top:8px">Nice</button></div>`);
   render();
@@ -892,21 +920,24 @@ function summaryText() {
   const t = parseKey(todayKey()), mon = addDays(t, -((t.getDay() + 6) % 7)), mk = keyOf(mon);
   const cs = S.checkins.filter(c => c.weight), last = cs[cs.length - 1], prev = cs.filter(c => c.date < mk).pop();
   const waist = latestCheckin('waist');
-  let trained = 0, planned = 0, meals = 0, mealsTot = 0; const lifts = [];
+  let trained = 0, planned = 0, meals = 0, mealsTot = 0, exN = 0, exK = 0; const lifts = [];
   for (let i = 0; i < 7; i++) {
     const k = keyOf(addDays(mon, i)); if (addDays(mon, i) > t) break;
     const st = dayStatus(k); planned++; if (st.trained) trained++; meals += st.meals; mealsTot += st.total;
+    for (const e of (dayRec(k).extra || [])) { exN++; exK += e.k; }
   }
   for (const [key, s] of Object.entries(S.sessions).sort()) {
     const d = key.split('|')[0]; if (d < mk || !sessionCounts(d, s)) continue;
     const wo = workoutOf(s.w);
     lifts.push(`${DOW[parseKey(d).getDay()]} — ${wo.name} (${wo.focus})`);
+    if (s.played) lifts.push(`  Football: ${s.played} min`);
     if (s.km && s.min) lifts.push(`  Run: ${s.km} km in ${s.min} min (${pace(s.km, s.min)}/km, ${fmt(s.km / (s.min / 60))} km/h)`);
     if (wo.ex) for (const ex of wo.ex) { const a = (s.ex[ex.id] || []).filter(x => x.done); if (a.length) lifts.push(`  ${ex.n}: ${a.map(x => ex.bw ? x.r : `${x.kg}×${x.r}`).join(', ')}`); }
   }
   return [`Recomp check-in — week ${weekNo()} (${shortDate(mk)}–${shortDate(todayKey())})`,
     `Weight: ${last ? fmt(last.weight) + ' kg' : '—'}${last && prev ? ` (${last.weight - prev.weight <= 0 ? '−' : '+'}${fmt(Math.abs(last.weight - prev.weight))} vs ${shortDate(prev.date)})` : ''} · Waist: ${waist ? fmt(waist.waist) + ' cm' : '—'}`,
     `Training days done: ${trained}/${planned} · Meals on plan: ${meals}/${mealsTot} · Streak: ${streak()} day${streak() === 1 ? "" : "s"}`,
+    `Extra food: ${exN ? `${exN} item${exN === 1 ? '' : 's'} · ${exK} kcal` : 'none'}`,
     '', ...(lifts.length ? lifts : ['No finished workouts yet this week.'])].join('\n');
 }
 async function copySummary() {
@@ -1017,9 +1048,18 @@ document.addEventListener('click', async e => {
   if (d.act === 'scrim' && e.target !== t) return;
   switch (d.act) {
     case 'tab': tab = d.tab; compareFrom = null; logDate = todayKey(); viewOff = 0; if (tab === 'train') trainSel = null; closeSheet(); render(); window.scrollTo(0, 0); break;
+    case 'extra-preset': { const r = dayRec(todayKey(), true), x = EXTRA_PRESETS[+d.i]; (r.extra = r.extra || []).push({ ...x }); save(); render(); toast(`Added ${x.n} · ${x.k} kcal`); break; }
+    case 'extra-add': {
+      const n = ($('#ex-n').value.trim() || 'Extra food').slice(0, 40), kc = num($('#ex-k').value), pr = $('#ex-p').value.trim() ? num($('#ex-p').value) : 0;
+      if (!(kc >= 1 && kc <= 3000)) { toast('Enter the kcal as a number, like 250'); break; }
+      if (!(pr >= 0 && pr <= 200)) { toast('Protein should be a number of grams, like 10'); break; }
+      const r = dayRec(todayKey(), true); (r.extra = r.extra || []).push({ n, k: Math.round(kc), p: Math.round(pr * 10) / 10 }); save(); render(); toast(`Added ${n}`); break;
+    }
+    case 'extra-del': { const r = dayRec(todayKey(), true); r.extra.splice(+d.i, 1); save(); render(); break; }
     case 'view-day': viewOff = +d.off; render(); window.scrollTo(0, 0); break;
     case 'prep': case 'sprep': { const f = d.act, r = dayRec(d.k, true); r[f] = r[f] || []; r[f][+d.i] = !r[f][+d.i]; save(); render(); break; }
-    case 'go-train': tab = 'train'; trainSel = null; logDate = todayKey(); render(); window.scrollTo(0, 0); break;
+    case 'go-foot': tab = 'train'; trainSel = 'FOOT'; logDate = todayKey(); render(); window.scrollTo(0, 0); break;
+    case 'go-train': tab = 'train'; trainSel = footSel();  logDate = todayKey(); render(); window.scrollTo(0, 0); break;
     case 'meal': { const r = dayRec(todayKey(), true); r.meals[+d.i] = !r.meals[+d.i]; save(); render(); break; }
     case 'habit': { const r = dayRec(todayKey(), true); r.habits[d.id] = !r.habits[d.id]; save(); render(); break; }
     case 'walk': { const r = dayRec(todayKey(), true); r.walk = !r.walk; save(); render(); if (r.walk) toast('Rest day done — streak kept 🔥'); break; }
