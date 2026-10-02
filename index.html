@@ -243,7 +243,7 @@ const PLAN = {
       { id: 'ohext', n: 'Overhead triceps extension', s: 3, lo: 12, hi: 12, rest: 60, inc: 2 },
       { id: 'calfseat', n: 'Seated calf raise', note: 'slow', s: 4, lo: 15, hi: 15, rest: 60, inc: 2.5 },
     ]},
-    D: { name: 'Workout D', focus: 'Arms, shoulders + calves', finisher: 'Finish: 5 min easy walk + stretch. Want more? Add the Intervals session.', ex: [
+    D: { name: 'Workout D', focus: 'Arms, shoulders, calves + legs & core', min: 90, finisher: 'Finish: 5 min easy walk + stretch. About 90 min in total — that’s enough; more just tires you for Monday.', ex: [
       { id: 'cgbench', n: 'Close-grip bench press', note: 'or assisted dips', s: 3, lo: 8, hi: 10, rest: 90, inc: 2.5 },
       { id: 'ezcurl', n: 'EZ-bar curl', s: 3, lo: 10, hi: 10, rest: 60, inc: 2.5 },
       { id: 'lateral', n: 'Dumbbell lateral raise', s: 3, lo: 12, hi: 15, rest: 60, inc: 1 },
@@ -251,7 +251,12 @@ const PLAN = {
       { id: 'skull', n: 'EZ-bar skull crusher', s: 3, lo: 10, hi: 12, rest: 60, inc: 2.5 },
       { id: 'facepull', n: 'Face pull', note: 'cable', s: 3, lo: 15, hi: 15, rest: 60, inc: 2.5 },
       { id: 'calfstand', n: 'Standing calf raise', note: 'slow', s: 4, lo: 12, hi: 15, rest: 60, inc: 2.5 },
-      { id: 'kneeraise', n: 'Hanging knee raise', s: 3, lo: 10, hi: 12, rest: 60, bw: true },
+      { id: 'legext', n: 'Leg extension', note: 'leg add-on · squeeze 1 s at the top', s: 3, lo: 12, hi: 15, rest: 60, inc: 2.5 },
+      { id: 'hipthrust', n: 'Hip thrust', note: 'leg add-on · machine or barbell', s: 3, lo: 10, hi: 10, rest: 90, inc: 5 },
+      { id: 'lunge2', n: 'Walking lunges', note: 'leg add-on · dumbbells · reps per leg', s: 2, lo: 12, hi: 12, rest: 90, inc: 2 },
+      { id: 'kneeraise', n: 'Hanging knee raise', note: 'core', s: 3, lo: 10, hi: 12, rest: 60, bw: true },
+      { id: 'plank', n: 'Plank', note: 'core', s: 3, lo: 30, hi: 45, rest: 60, unit: 's', bw: true },
+      { id: 'sideplank', n: 'Side plank', note: 'core · seconds per side', s: 2, lo: 30, hi: 30, rest: 45, unit: 's', bw: true },
     ]},
   },
   cardio: {
@@ -281,7 +286,7 @@ const PLAN = {
     3: { kind: 'rest', menu: 'vegan', note: 'Walk after dinner helps digestion and sleep.' },
     4: { kind: 'gym', w: 'C', menu: 'gymEggs', time: 'Gym 19:30' },
     5: { kind: 'rest', menu: 'vegan', note: 'Free evening — go to bed on time, tomorrow is gym morning. Make the pancake batter?' },
-    6: { kind: 'gym', w: 'D', menu: 'sat', time: 'Morning' },
+    6: { kind: 'gym', w: 'D', menu: 'sat', time: 'Any time · ~90 min' },
     0: { kind: 'cardio', w: 'SUN', menu: 'sun', time: 'Any time' },
   },
   menus: {
@@ -306,10 +311,10 @@ const PLAN = {
       { t: '21:00', m: '80 g chickpea pasta + lentil ragù + salad with lemon', k: 640, p: 36 },
       { t: 'Later', m: '150 g plain soy yogurt + cinnamon', k: 85, p: 6 },
     ]},
-    sat: { name: 'Saturday · gym morning', meals: [
-      { t: '09:00', m: '🥞 Protein pancakes: blend 40 g oats + 2 eggs + ½ banana + ½ scoop whey + splash of milk, 3 small pancakes, no oil — + 200 ml semi-skimmed milk', k: 490, p: 36 },
-      { t: '12:30', m: '💪 After the gym: 1 scoop whey + 200 ml oat milk + 1 banana + ice + 5 g creatine', k: 300, p: 27 },
-      { t: '14:00', m: 'Lunch box: 150 g chicken + 80 g rice (dry) + frozen vegetables + 1 tsp oil', k: 555, p: 44 },
+    sat: { name: 'Saturday · big gym day', meals: [
+      { t: 'Before', m: '🥞 Breakfast 1.5–2 h before the gym — protein pancakes: blend 40 g oats + 2 eggs + ½ banana + ½ scoop whey + splash of milk, 3 small pancakes, no oil — + 200 ml semi-skimmed milk', k: 490, p: 36 },
+      { t: 'After', m: '💪 Right after the gym: 1 scoop whey + 200 ml oat milk + 1 banana + ice + 5 g creatine', k: 300, p: 27 },
+      { t: '+2 h', m: 'Lunch box, 1–2 h after the gym: 150 g chicken + 80 g rice (dry) + frozen vegetables + 1 tsp oil', k: 555, p: 44 },
       { t: '21:00', m: '🍕 Free meal: 1 pizza + water or 1 beer', k: 850, p: 35 },
     ]},
     sun: { name: 'Sunday · run + prep', meals: [
@@ -325,7 +330,7 @@ const PREP = {
   gymEggs: ['Lunch box in the fridge (chicken + rice + vegetables)', 'Breakfast: 3 boiled eggs + bread + milk', 'Shake stuff ready: oat milk, banana, whey, oats, peanut butter + 2 bottles — blend in the morning', 'Quick dinner ready: beef ragù or a chicken portion', GYM_BAG],
   gymYogurt: ['Lunch box in the fridge (chicken + rice + vegetables)', 'Breakfast: Greek yogurt + oats + fruit + 2 boiled eggs', 'Shake stuff ready: oat milk, banana, whey, oats, peanut butter + 2 bottles — blend in the morning', 'Quick dinner ready: beef ragù or a chicken portion', GYM_BAG],
   vegan: ['🌱 Vegan day — no eggs, milk, yogurt or whey', 'Breakfast shaker: oat milk + pea protein + oats + banana', 'Lentil pasta lunch box — move it from the freezer to the fridge tonight', 'Roasted chickpeas + apple for 17:00', 'Dinner: lentil ragù + chickpea pasta · soy yogurt'],
-  sat: ['Pancake ingredients: oats, 2 eggs, banana, whey, milk', GYM_BAG + ' (gym in the morning)', 'After-gym shake: whey, oat milk, banana', 'Lunch box in the fridge', 'Pizza night 🍕 — one pizza, enjoy it'],
+  sat: ['Pancake ingredients: oats, 2 eggs, banana, whey, milk', GYM_BAG + ' — Saturday session is about 90 min, any time', 'After-gym shake: whey, oat milk, banana', 'Lunch box in the fridge', 'Pizza night 🍕 — one pizza, enjoy it'],
   sun: ['Breakfast: Saturday’s pancakes in the fridge (or yogurt + 2 boiled eggs)', 'Running shoes ready', 'Shopping done for Sunday prep (see the Sunday prep list)'],
 };
 const SUNDAY_PREP = ['Boil 8–10 eggs (keep unpeeled in the fridge)', '5 lunch boxes: 750 g chicken + 400 g rice (dry) + frozen vegetables', 'Beef ragù: 500 g macinato di manzo + passata + onion + carrot', '2 red lentil pasta boxes — Wednesday in the fridge, Friday in the freezer', 'Lentil ragù for Wednesday + Friday dinners', 'Roasted chickpeas for Wednesday', 'Check-in: weight + waist in Progress'];
@@ -529,7 +534,7 @@ function renderToday() {
       ${plan.note ? `<div class="muted small">${plan.note}</div>` : ''}</section>`;
   } else {
     const w = workoutOf(plan.w);
-    const meta = w.ex ? `${w.ex.length} exercises · about 60 min` : `${w.steps.length} steps · about 35 min`;
+    const meta = w.ex ? `${w.ex.length} exercises · about ${w.min || 60} min` : `${w.steps.length} steps · about 35 min`;
     training = `<section class="card stack">
       <div class="row between"><span class="eyebrow">${label} training</span>${st.trained ? '<span class="pill good">Done ✓</span>' : `<span class="pill accent">${plan.time || 'Any time'}</span>`}</div>
       <div><div class="display h2">${w.name}</div><div class="muted">${w.focus} · ${meta}</div></div>
