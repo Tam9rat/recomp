@@ -380,6 +380,8 @@ const parseKey = k => { const [y, m, d] = k.split('-').map(Number); return new D
 const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
 const shortDate = k => { const d = parseKey(k); return `${d.getDate()} ${MON[d.getMonth()]}`; };
 const fmt = n => (Math.round(n * 10) / 10).toString();
+// Accepts "2,1" (Italian keyboard) as well as "2.1"
+const num = v => { const x = parseFloat(String(v ?? '').trim().replace(',', '.')); return isFinite(x) ? x : NaN; };
 const daysBetween = (a, b) => Math.round((parseKey(b) - parseKey(a)) / 864e5);
 const CHECK = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 
@@ -612,7 +614,7 @@ function renderTrain() {
         return `<div class="set ${r.done ? 'done' : ''}">
           <span class="n">${i + 1}</span>
           ${ex.bw ? `<span class="muted small" style="text-align:center">body weight</span>` :
-          `<label><input type="number" inputmode="decimal" step="0.5" min="0" aria-label="${ex.n} set ${i + 1} weight" data-ex="${ex.id}" data-i="${i}" data-f="kg" value="${r.kg ?? ''}" placeholder="${sug.kg != null ? fmt(sug.kg) : '–'}"><span class="unit">kg</span></label>`}
+          `<label><input type="text" inputmode="decimal" autocomplete="off" aria-label="${ex.n} set ${i + 1} weight" data-ex="${ex.id}" data-i="${i}" data-f="kg" value="${r.kg ?? ''}" placeholder="${sug.kg != null ? fmt(sug.kg) : '–'}"><span class="unit">kg</span></label>`}
           <label><input type="number" inputmode="numeric" min="0" aria-label="${ex.n} set ${i + 1} ${ex.unit === 's' ? 'seconds' : 'reps'}" data-ex="${ex.id}" data-i="${i}" data-f="r" value="${r.r ?? ''}" placeholder="${ex.hi}"><span class="unit">${ex.unit === 's' ? 'sec' : 'reps'}</span></label>
           <button class="set-btn ${r.done ? 'on' : ''}" data-act="set" data-ex="${ex.id}" data-i="${i}" aria-label="Set ${i + 1} done">${CHECK}</button>
         </div>`;
@@ -654,8 +656,8 @@ function runBlock(sess, gym) {
   return `<section class="card stack">
     <div class="row between"><span class="eyebrow">${gym ? 'Run first · 10 min at 12 km/h' : 'Treadmill result'}</span>${logged ? '<span class="pill good">Logged ✓</span>' : ''}</div>
     <div class="grid2">
-      <label class="field">Distance (km)<input type="number" inputmode="decimal" step="0.01" id="cf-km" data-cf="km" value="${(sess && sess.km) || ''}" placeholder="${gym ? '2.0' : '5.0'}"></label>
-      <label class="field">Time (min)<input type="number" inputmode="decimal" step="0.1" id="cf-min" data-cf="min" value="${(sess && sess.min) || ''}" placeholder="${gym ? '10' : '27'}"></label>
+      <label class="field">Distance (km)<input type="text" inputmode="decimal" autocomplete="off" id="cf-km" data-cf="km" value="${(sess && sess.km) || ''}" placeholder="${gym ? '2.0' : '5.0'}"></label>
+      <label class="field">Time (min)<input type="text" inputmode="decimal" autocomplete="off" id="cf-min" data-cf="min" value="${(sess && sess.min) || ''}" placeholder="${gym ? '10' : '27'}"></label>
     </div>
     ${gym && !logged ? '<button class="btn ghost" data-act="run-quick">Done as planned · 2.0 km in 10 min</button>' : ''}
     <div class="muted small" id="pace-line">${paceLine(sess)}</div>
@@ -670,8 +672,8 @@ function warmupCard(sess) {
       ${item(0, 'Walk', '5 min · 6 km/h', wu[0])}
       ${item(1, 'Run', '10 min · 12 km/h · tap = done as planned (2.0 km)', ran)}
       <div class="grid2" style="padding-bottom:8px">
-        <label class="field">Distance (km)<input type="number" inputmode="decimal" step="0.01" id="cf-km" data-cf="km" value="${(sess && sess.km) || ''}" placeholder="2.0"></label>
-        <label class="field">Time (min)<input type="number" inputmode="decimal" step="0.1" id="cf-min" data-cf="min" value="${(sess && sess.min) || ''}" placeholder="10"></label>
+        <label class="field">Distance (km)<input type="text" inputmode="decimal" autocomplete="off" id="cf-km" data-cf="km" value="${(sess && sess.km) || ''}" placeholder="2.0"></label>
+        <label class="field">Time (min)<input type="text" inputmode="decimal" autocomplete="off" id="cf-min" data-cf="min" value="${(sess && sess.min) || ''}" placeholder="10"></label>
       </div>
       <div class="muted small" id="pace-line" style="padding-bottom:12px">${paceLine(sess)}</div>
       ${item(2, '10 squats + 10 push-ups', 'body weight', wu[2])}
@@ -703,7 +705,7 @@ function ensureSets(sess, ex) {
 function toggleSet(exId, i) {
   const w = currentW(), wo = workoutOf(w), ex = wo.ex.find(e => e.id === exId), sess = getSession(w, true), arr = ensureSets(sess, ex), row = arr[i];
   const kgEl = $(`input[data-ex="${exId}"][data-i="${i}"][data-f="kg"]`), rEl = $(`input[data-ex="${exId}"][data-i="${i}"][data-f="r"]`);
-  if (kgEl) row.kg = kgEl.value; if (rEl) row.r = rEl.value;
+  if (kgEl) row.kg = kgEl.value.trim().replace(',', '.'); if (rEl) row.r = rEl.value.trim();
   if (!row.done) {
     const sug = suggest(ex, lastSets(exId, logDate));
     const prevKg = i > 0 ? arr[i - 1].kg : '';
@@ -826,8 +828,8 @@ function renderProgress() {
       <div class="row between"><span class="eyebrow">Check-in</span><span class="muted tiny">Every Sunday · morning · before eating</span></div>
       <div class="grid3">
         <label class="field">Date<input type="date" id="ci-date" value="${todayKey()}"></label>
-        <label class="field">Weight kg<input type="number" inputmode="decimal" step="0.1" id="ci-weight" placeholder="${fmt(now)}"></label>
-        <label class="field">Waist cm<input type="number" inputmode="decimal" step="0.5" id="ci-waist" placeholder="at navel"></label>
+        <label class="field">Weight kg<input type="text" inputmode="decimal" autocomplete="off" id="ci-weight" placeholder="${fmt(now)}"></label>
+        <label class="field">Waist cm<input type="text" inputmode="decimal" autocomplete="off" id="ci-waist" placeholder="at navel"></label>
       </div>
       <button class="btn" data-act="ci-save">Save check-in</button>
     </section>
@@ -849,7 +851,7 @@ function runs() {
   const out = [];
   for (const [key, s] of Object.entries(S.sessions)) {
     const km = +s.km, min = +s.min;
-    if (km > 0 && min > 0) out.push({ date: key.split('|')[0], km, min, speed: km / (min / 60) });
+    if (km > 0 && min > 0 && km / (min / 60) <= 30) out.push({ date: key.split('|')[0], km, min, speed: km / (min / 60) });
   }
   return out.sort((a, b) => a.date < b.date ? -1 : 1);
 }
@@ -872,7 +874,7 @@ function runCard() {
     <div>${rows}</div></section>`;
 }
 function saveCheckin() {
-  const date = $('#ci-date').value, w = parseFloat($('#ci-weight').value), waist = parseFloat($('#ci-waist').value);
+  const date = $('#ci-date').value, w = num($('#ci-weight').value), waist = num($('#ci-waist').value);
   if (!date || (!(w > 0) && !(waist > 0))) { toast('Enter your weight or waist first'); return; }
   const i = S.checkins.findIndex(c => c.date === date);
   const c = i >= 0 ? S.checkins[i] : { date };
@@ -1019,8 +1021,9 @@ document.addEventListener('click', async e => {
     case 'warm': {
       const s = getSession(currentW(), true), i = +d.i;
       if (i === 1) {
-        if (s.km && s.min) { s.km = ''; s.min = ''; }
-        else { s.km = +($('#cf-km') && $('#cf-km').value) || 2; s.min = +($('#cf-min') && $('#cf-min').value) || 10; toast(`Run logged · ${fmt(s.km / (s.min / 60))} km/h`); }
+        const km = num($('#cf-km') && $('#cf-km').value), mn = num($('#cf-min') && $('#cf-min').value);
+        if (s.km && s.min && !(km > 0 && mn > 0 && (km !== s.km || mn !== s.min))) { toast('Run already saved ✓ — change the numbers to edit it'); break; }
+        s.km = km > 0 ? km : 2; s.min = mn > 0 ? mn : 10; toast(`Run saved · ${fmt(s.km / (s.min / 60))} km/h`);
       } else { s.warm = s.warm || []; s.warm[i] = !s.warm[i]; }
       save(); render(); break;
     }
@@ -1054,8 +1057,9 @@ document.addEventListener('change', e => {
   const el = e.target;
   if (el.dataset.f) {
     const w = currentW(), ex = workoutOf(w).ex.find(x => x.id === el.dataset.ex), sess = getSession(w, true);
-    ensureSets(sess, ex)[+el.dataset.i][el.dataset.f] = el.value; save();
-  } else if (el.dataset.cf) { const s = getSession(currentW(), true); s[el.dataset.cf] = el.value ? parseFloat(el.value) : ''; save(); const pl = $('#pace-line'); if (pl) pl.innerHTML = paceLine(s); if (s.km && s.min) { const q = $('[data-act="run-quick"]'); if (q) q.remove(); } refreshWarm(s); }
+    ensureSets(sess, ex)[+el.dataset.i][el.dataset.f] = el.value.trim().replace(',', '.'); save();
+  } else if (el.dataset.cf) { const s = getSession(currentW(), true); const v = num(el.value); s[el.dataset.cf] = v > 0 ? v : ''; save();
+    if (s.km && s.min && s.km / (s.min / 60) > 25) toast(`That’s ${fmt(s.km / (s.min / 60))} km/h — check the distance (2.1, not 21)`); const pl = $('#pace-line'); if (pl) pl.innerHTML = paceLine(s); if (s.km && s.min) { const q = $('[data-act="run-quick"]'); if (q) q.remove(); } refreshWarm(s); }
   else if (el.id === 'photo-input') addPhoto(el.files[0]);
   else if (el.id === 'import-input') importData(el.files[0]);
   else if (el.id === 'log-date') { logDate = el.value; trainSel = null; render(); }
