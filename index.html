@@ -226,15 +226,19 @@ const PLAN = {
       { id: 'calfstand', n: 'Standing calf raise', note: '2 s up · 1 s squeeze · 2 s down', s: 4, lo: 12, hi: 15, rest: 60, inc: 2.5 },
       { id: 'plank', n: 'Plank', s: 3, lo: 30, hi: 45, rest: 60, unit: 's', bw: true },
     ]},
-    B: { name: 'Workout B', focus: 'Upper body + arms', finisher: 'Finish: 5 min easy walk + stretch', ex: [
+    B: { name: 'Workout B', focus: 'Upper body + arms + chest & belly', min: 80, finisher: 'Finish: 5 min easy walk + stretch', ex: [
       { id: 'dbbench', n: 'Dumbbell bench press', s: 4, lo: 8, hi: 10, rest: 120, inc: 2 },
       { id: 'pulldown', n: 'Lat pulldown', s: 4, lo: 8, hi: 10, rest: 90, inc: 2.5 },
       { id: 'dbpress', n: 'Seated dumbbell shoulder press', s: 3, lo: 10, hi: 10, rest: 90, inc: 2 },
       { id: 'cablerow', n: 'Seated cable row', s: 3, lo: 10, hi: 12, rest: 90, inc: 2.5 },
       { id: 'curl', n: 'Dumbbell biceps curl', s: 3, lo: 10, hi: 12, rest: 60, inc: 1 },
       { id: 'pushdown', n: 'Triceps rope pushdown', s: 3, lo: 10, hi: 12, rest: 60, inc: 2.5 },
+      { id: 'fly', n: 'Chest fly', note: 'chest · cable or dumbbells · slow stretch, squeeze 1 s', s: 3, lo: 12, hi: 15, rest: 60, inc: 1 },
+      { id: 'kneeraise', n: 'Hanging knee raise', note: 'belly', s: 3, lo: 10, hi: 12, rest: 45, bw: true },
+      { id: 'deadbug', n: 'Dead bug', note: 'belly · reps per side · lower back flat on the floor', s: 3, lo: 10, hi: 10, rest: 45, bw: true },
+      { id: 'sideplank', n: 'Side plank', note: 'belly · seconds per side', s: 2, lo: 30, hi: 30, rest: 45, unit: 's', bw: true },
     ]},
-    C: { name: 'Workout C', focus: 'Full body + arms + calves', ex: [
+    C: { name: 'Workout C', focus: 'Full body + arms + chest & belly', min: 80, ex: [
       { id: 'bss', n: 'Bulgarian split squat', note: 'reps per leg', s: 3, lo: 8, hi: 8, rest: 90, inc: 2 },
       { id: 'incline', n: 'Incline dumbbell press', s: 3, lo: 10, hi: 10, rest: 90, inc: 2 },
       { id: 'dbrow', n: 'One-arm dumbbell row', note: 'reps per arm', s: 3, lo: 10, hi: 10, rest: 90, inc: 2 },
@@ -242,21 +246,25 @@ const PLAN = {
       { id: 'hammer', n: 'Hammer curl', s: 3, lo: 12, hi: 12, rest: 60, inc: 1 },
       { id: 'ohext', n: 'Overhead triceps extension', s: 3, lo: 12, hi: 12, rest: 60, inc: 2 },
       { id: 'calfseat', n: 'Seated calf raise', note: 'slow', s: 4, lo: 15, hi: 15, rest: 60, inc: 2.5 },
+      { id: 'pushup', n: 'Push-ups', note: 'chest · 3 s down, chest close to the floor', s: 3, lo: 10, hi: 15, rest: 60, bw: true },
+      { id: 'kneeraise', n: 'Hanging knee raise', note: 'belly', s: 3, lo: 10, hi: 12, rest: 45, bw: true },
+      { id: 'deadbug', n: 'Dead bug', note: 'belly · reps per side · lower back flat on the floor', s: 3, lo: 10, hi: 10, rest: 45, bw: true },
+      { id: 'sideplank', n: 'Side plank', note: 'belly · seconds per side', s: 2, lo: 30, hi: 30, rest: 45, unit: 's', bw: true },
     ]},
-    D: { name: 'Workout D', focus: 'Arms, shoulders, calves + legs & core', min: 90, finisher: 'Finish: 5 min easy walk + stretch. About 90 min in total — that’s enough; more just tires you for Monday.', ex: [
-      { id: 'cgbench', n: 'Close-grip bench press', note: 'or assisted dips', s: 3, lo: 8, hi: 10, rest: 90, inc: 2.5 },
+    D: { name: 'Workout D', focus: 'Arms, shoulders, calves + belly & legs', min: 90, finisher: 'Finish: 5 min easy walk + stretch. About 90 min in total — that’s enough; more just tires you for Monday.', ex: [
+      { id: 'cgbench', n: 'Close-grip bench press', note: 'chest + triceps · log bar + plates · or assisted dips', s: 3, lo: 8, hi: 10, rest: 90, inc: 2.5 },
       { id: 'ezcurl', n: 'EZ-bar curl', s: 3, lo: 10, hi: 10, rest: 60, inc: 2.5 },
       { id: 'lateral', n: 'Dumbbell lateral raise', s: 3, lo: 12, hi: 15, rest: 60, inc: 1 },
       { id: 'inclcurl', n: 'Incline dumbbell curl', s: 3, lo: 10, hi: 12, rest: 60, inc: 1 },
       { id: 'skull', n: 'EZ-bar skull crusher', s: 3, lo: 10, hi: 12, rest: 60, inc: 2.5 },
       { id: 'facepull', n: 'Face pull', note: 'cable', s: 3, lo: 15, hi: 15, rest: 60, inc: 2.5 },
       { id: 'calfstand', n: 'Standing calf raise', note: 'slow', s: 4, lo: 12, hi: 15, rest: 60, inc: 2.5 },
+      { id: 'kneeraise', n: 'Hanging knee raise', note: 'belly — do it before the legs so it doesn’t get skipped', s: 3, lo: 10, hi: 12, rest: 45, bw: true },
+      { id: 'plank', n: 'Plank', note: 'belly', s: 3, lo: 30, hi: 45, rest: 45, unit: 's', bw: true },
+      { id: 'sideplank', n: 'Side plank', note: 'belly · seconds per side', s: 2, lo: 30, hi: 30, rest: 45, unit: 's', bw: true },
       { id: 'legext', n: 'Leg extension', note: 'leg add-on · squeeze 1 s at the top', s: 3, lo: 12, hi: 15, rest: 60, inc: 2.5 },
       { id: 'hipthrust', n: 'Hip thrust', note: 'leg add-on · machine or barbell', s: 3, lo: 10, hi: 10, rest: 90, inc: 5 },
       { id: 'lunge2', n: 'Walking lunges', note: 'leg add-on · dumbbells · reps per leg', s: 2, lo: 12, hi: 12, rest: 90, inc: 2 },
-      { id: 'kneeraise', n: 'Hanging knee raise', note: 'core', s: 3, lo: 10, hi: 12, rest: 60, bw: true },
-      { id: 'plank', n: 'Plank', note: 'core', s: 3, lo: 30, hi: 45, rest: 60, unit: 's', bw: true },
-      { id: 'sideplank', n: 'Side plank', note: 'core · seconds per side', s: 2, lo: 30, hi: 30, rest: 45, unit: 's', bw: true },
     ]},
   },
   cardio: {
@@ -841,13 +849,14 @@ function bests() {
   return map;
 }
 function renderProgress() {
-  const cw = latestCheckin('weight'), waists = S.checkins.filter(c => c.waist);
+  const cw = latestCheckin('weight'), waists = S.checkins.filter(c => c.waist), chests = S.checkins.filter(c => c.chest);
+  const cDelta = chests.length > 1 ? chests[chests.length - 1].chest - chests[0].chest : null;
   const now = cw ? cw.weight : GOAL.start, lost = GOAL.start - now, togo = now - GOAL.target;
   const wDelta = waists.length > 1 ? waists[waists.length - 1].waist - waists[0].waist : null;
   const b = bests(), bRows = Object.entries(b).sort((a, c) => c[1].kg - a[1].kg).slice(0, 10)
     .map(([id, v]) => `<div class="list-row"><span>${EXN[id] || id}</span><span class="num">${fmt(v.kg)} kg × ${v.r} <span class="muted tiny">${shortDate(v.date)}</span></span></div>`).join('');
   const hist = S.checkins.slice().reverse().map((c, i) => `<div class="list-row"><span><b class="num">${shortDate(c.date)}</b> <span class="muted small">${c.note || ''}</span></span>
-    <span class="row" style="gap:6px"><span class="num">${c.weight ? fmt(c.weight) + ' kg' : ''}${c.waist ? ' · ' + fmt(c.waist) + ' cm' : ''}</span><button class="x-btn" data-act="ci-del" data-date="${c.date}" aria-label="Delete check-in ${shortDate(c.date)}">✕</button></span></div>`).join('');
+    <span class="row" style="gap:6px"><span class="num">${c.weight ? fmt(c.weight) + ' kg' : ''}${c.waist ? ' · waist ' + fmt(c.waist) : ''}${c.chest ? ' · chest ' + fmt(c.chest) : ''}</span><button class="x-btn" data-act="ci-del" data-date="${c.date}" aria-label="Delete check-in ${shortDate(c.date)}">✕</button></span></div>`).join('');
   view.innerHTML = `<div class="stack">
     <header class="stack" style="gap:6px"><span class="eyebrow">Phase 1 · ${GOAL.start} → ${GOAL.target} kg</span><h1 class="display h1">Progress</h1></header>
     <div class="tiles">
@@ -857,17 +866,21 @@ function renderProgress() {
     </div>
     <section class="card stack">
       <div class="row between"><span class="eyebrow">Check-in</span><span class="muted tiny">Every Sunday · morning · before eating</span></div>
-      <div class="grid3">
+      <div class="grid2">
         <label class="field">Date<input type="date" id="ci-date" value="${todayKey()}"></label>
         <label class="field">Weight kg<input type="text" inputmode="decimal" autocomplete="off" id="ci-weight" placeholder="${fmt(now)}"></label>
-        <label class="field">Waist cm<input type="text" inputmode="decimal" autocomplete="off" id="ci-waist" placeholder="at navel"></label>
+        <label class="field">Waist cm<input type="text" inputmode="decimal" autocomplete="off" id="ci-waist" placeholder="at belly button"></label>
+        <label class="field">Chest cm<input type="text" inputmode="decimal" autocomplete="off" id="ci-chest" placeholder="at nipples"></label>
       </div>
+      <div class="muted tiny">Tape level, relaxed, don’t suck in. Same time each Sunday, before eating.</div>
       <button class="btn" data-act="ci-save">Save check-in</button>
     </section>
     <section class="card stack"><div class="row between"><span class="eyebrow">Weight</span><span class="muted tiny">target −0.5 to −0.7 kg / week</span></div>
       <div class="chart">${chart(S.checkins.filter(c => c.weight).map(c => ({ date: c.date, v: +c.weight })), { target: GOAL.target, unit: 'kg', label: 'weight' })}</div></section>
     <section class="card stack"><div class="row between"><span class="eyebrow">Waist</span><span class="muted tiny">${wDelta != null ? `${wDelta <= 0 ? '−' : '+'}${fmt(Math.abs(wDelta))} cm since first` : 'measure at the belly button'}</span></div>
       <div class="chart">${chart(waists.map(c => ({ date: c.date, v: +c.waist })), { unit: 'cm', label: 'waist' })}</div></section>
+    <section class="card stack"><div class="row between"><span class="eyebrow">Chest</span><span class="muted tiny">${cDelta != null ? `${cDelta <= 0 ? '−' : '+'}${fmt(Math.abs(cDelta))} cm since first` : 'measure around the nipples'}</span></div>
+      <div class="chart">${chart(chests.map(c => ({ date: c.date, v: +c.chest })), { unit: 'cm', label: 'chest' })}</div></section>
     <section class="card stack"><div class="row between"><span class="eyebrow">Last 12 weeks</span>
       <span class="legend">less <i style="background:var(--surface-2)"></i><i style="background:color-mix(in srgb,var(--accent) 30%,var(--surface-2))"></i><i style="background:color-mix(in srgb,var(--accent) 80%,var(--surface-2))"></i><i style="background:var(--accent)"></i> more</span></div>
       <div class="heat" aria-label="Consistency calendar, rows Monday to Sunday">${heatmap()}</div>
@@ -882,7 +895,7 @@ function runs() {
   const out = [];
   for (const [key, s] of Object.entries(S.sessions)) {
     const km = +s.km, min = +s.min;
-    if (km > 0 && min > 0 && km / (min / 60) <= 30) out.push({ date: key.split('|')[0], km, min, speed: km / (min / 60) });
+    if (km > 0 && min > 0 && km / (min / 60) <= 22) out.push({ date: key.split('|')[0], km, min, speed: km / (min / 60) });
   }
   return out.sort((a, b) => a.date < b.date ? -1 : 1);
 }
@@ -905,21 +918,22 @@ function runCard() {
     <div>${rows}</div></section>`;
 }
 function saveCheckin() {
-  const date = $('#ci-date').value, w = num($('#ci-weight').value), waist = num($('#ci-waist').value);
-  const wTxt = $('#ci-weight').value.trim(), waTxt = $('#ci-waist').value.trim();
-  if (!date || (!wTxt && !waTxt)) { toast('Enter your weight or waist first'); return; }
+  const date = $('#ci-date').value, w = num($('#ci-weight').value), waist = num($('#ci-waist').value), chest = num($('#ci-chest').value);
+  const wTxt = $('#ci-weight').value.trim(), waTxt = $('#ci-waist').value.trim(), chTxt = $('#ci-chest').value.trim();
+  if (!date || (!wTxt && !waTxt && !chTxt)) { toast('Enter your weight, waist or chest first'); return; }
+  if (chTxt && !(chest >= 60 && chest <= 170)) { toast(`${chTxt} cm looks wrong — measure around the nipples (like 102)`); return; }
   if (wTxt && !(w >= 35 && w <= 200)) { toast(`${wTxt} kg looks wrong — check the number (like 78.4)`); return; }
   if (waTxt && !(waist >= 50 && waist <= 160)) { toast(`${waTxt} cm looks wrong — measure at the belly button (like 94)`); return; }
   const i = S.checkins.findIndex(c => c.date === date);
   const c = i >= 0 ? S.checkins[i] : { date };
-  if (w > 0) c.weight = w; if (waist > 0) c.waist = waist;
+  if (w > 0) c.weight = w; if (waist > 0) c.waist = waist; if (chest > 0) c.chest = chest;
   if (i < 0) S.checkins.push(c);
   S.checkins.sort((a, b) => a.date < b.date ? -1 : 1); save(); toast('Check-in saved'); render();
 }
 function summaryText() {
   const t = parseKey(todayKey()), mon = addDays(t, -((t.getDay() + 6) % 7)), mk = keyOf(mon);
   const cs = S.checkins.filter(c => c.weight), last = cs[cs.length - 1], prev = cs.filter(c => c.date < mk).pop();
-  const waist = latestCheckin('waist');
+  const waist = latestCheckin('waist'), chestC = latestCheckin('chest');
   let trained = 0, planned = 0, meals = 0, mealsTot = 0, exN = 0, exK = 0; const lifts = [];
   for (let i = 0; i < 7; i++) {
     const k = keyOf(addDays(mon, i)); if (addDays(mon, i) > t) break;
@@ -935,7 +949,7 @@ function summaryText() {
     if (wo.ex) for (const ex of wo.ex) { const a = (s.ex[ex.id] || []).filter(x => x.done); if (a.length) lifts.push(`  ${ex.n}: ${a.map(x => ex.bw ? x.r : `${x.kg}×${x.r}`).join(', ')}`); }
   }
   return [`Recomp check-in — week ${weekNo()} (${shortDate(mk)}–${shortDate(todayKey())})`,
-    `Weight: ${last ? fmt(last.weight) + ' kg' : '—'}${last && prev ? ` (${last.weight - prev.weight <= 0 ? '−' : '+'}${fmt(Math.abs(last.weight - prev.weight))} vs ${shortDate(prev.date)})` : ''} · Waist: ${waist ? fmt(waist.waist) + ' cm' : '—'}`,
+    `Weight: ${last ? fmt(last.weight) + ' kg' : '—'}${last && prev ? ` (${last.weight - prev.weight <= 0 ? '−' : '+'}${fmt(Math.abs(last.weight - prev.weight))} vs ${shortDate(prev.date)})` : ''} · Waist: ${waist ? fmt(waist.waist) + ' cm' : '—'} · Chest: ${chestC ? fmt(chestC.chest) + ' cm' : '—'}`,
     `Training days done: ${trained}/${planned} · Meals on plan: ${meals}/${mealsTot} · Streak: ${streak()} day${streak() === 1 ? "" : "s"}`,
     `Extra food: ${exN ? `${exN} item${exN === 1 ? '' : 's'} · ${exK} kcal` : 'none'}`,
     '', ...(lifts.length ? lifts : ['No finished workouts yet this week.'])].join('\n');
@@ -1107,7 +1121,7 @@ document.addEventListener('change', e => {
     if (el.value.trim() && !v) toast(f === 'kg' ? 'Use a number for kg, like 12.5' : 'Use a whole number, like 10');
     ensureSets(sess, ex)[+el.dataset.i][f] = v; el.value = v; save();
   } else if (el.dataset.cf) { const s = getSession(currentW(), true); const v = num(el.value); s[el.dataset.cf] = v > 0 ? v : ''; save();
-    if (s.km && s.min && s.km / (s.min / 60) > 25) toast(`That’s ${fmt(s.km / (s.min / 60))} km/h — check the distance (2.1, not 21)`); const pl = $('#pace-line'); if (pl) pl.innerHTML = paceLine(s); if (s.km && s.min) { const q = $('[data-act="run-quick"]'); if (q) q.remove(); } refreshWarm(s); }
+    if (s.km && s.min && s.km / (s.min / 60) > 22) toast(`That’s ${fmt(s.km / (s.min / 60))} km/h — check the distance (2.1, not 21)`); const pl = $('#pace-line'); if (pl) pl.innerHTML = paceLine(s); if (s.km && s.min) { const q = $('[data-act="run-quick"]'); if (q) q.remove(); } refreshWarm(s); }
   else if (el.id === 'photo-input') addPhoto(el.files[0]);
   else if (el.id === 'import-input') importData(el.files[0]);
   else if (el.id === 'log-date') { logDate = el.value; trainSel = null; render(); }
