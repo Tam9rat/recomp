@@ -296,9 +296,9 @@ const PLAN = {
   days: {
     1: { kind: 'gym', w: 'A', menu: 'gymMon', time: 'Gym 19:30' },
     2: { kind: 'gym', w: 'B', menu: 'gymTue', time: 'Gym 19:30' },
-    3: { kind: 'rest', menu: 'veganWed', note: 'Walk after dinner helps digestion and sleep.' },
+    3: { kind: 'rest', menu: 'vegan', note: 'Walk after dinner helps digestion and sleep.' },
     4: { kind: 'gym', w: 'C', menu: 'gymThu', time: 'Gym 19:30' },
-    5: { kind: 'rest', menu: 'veganFri', note: 'Free evening — go to bed on time, tomorrow is gym morning. Make the pancake batter?' },
+    5: { kind: 'rest', menu: 'vegan', note: 'Free evening — go to bed on time, tomorrow is gym morning. Make the pancake batter?' },
     6: { kind: 'gym', w: 'D', menu: 'sat', time: 'Any time · ~90 min' },
     0: { kind: 'cardio', w: 'SUN', menu: 'sun', time: 'Any time' },
   },
@@ -321,18 +321,11 @@ const PLAN = {
       { t: 'Gym', m: '🥤 Your shake — before or after the gym: 45 g oats or muesli (weighed) + 1 scoop whey + 1 level spoon peanut butter (15 g) + 1 banana + 200 ml milk + water + 5 g creatine', k: 580, p: 40 },
       { t: '21:00', m: '🍚 Beef ragù (from the freezer) + 50 g rice (dry) + big salad', k: 455, p: 38 },
     ]},
-    veganWed: { name: 'Vegan menu · rest day', vegan: true, meals: [
-      { t: '07:00', m: 'Shaker: 300 ml oat milk + 1 scoop pea protein + 40 g oats + 1 banana + 5 g creatine', k: 485, p: 33 },
-      { t: '12:30', m: 'Lunch box (red lentil pasta)', k: 440, p: 27 },
-      { t: '17:00', m: '150 g roasted chickpeas + 1 apple', k: 260, p: 11 },
-      { t: '21:00', m: '60 g chickpea pasta (dry) + lentil ragù + big salad with lemon', k: 570, p: 32 },
-      { t: 'Later', m: '150 g plain soy yogurt + cinnamon', k: 85, p: 6 },
-    ]},
-    veganFri: { name: 'Vegan menu · rest day', vegan: true, meals: [
-      { t: '07:00', m: 'Shaker: 300 ml oat milk + 1 scoop pea protein + 40 g oats + 1 banana + 5 g creatine', k: 485, p: 33 },
-      { t: '12:30', m: 'Lunch box (red lentil pasta)', k: 440, p: 27 },
-      { t: '17:00', m: '150 g roasted chickpeas + 1 apple', k: 260, p: 11 },
-      { t: '21:00', m: '🥘 Red lentil stew (misir style): 80 g red lentils (dry) + onion + passata + 1 tsp oil (+ berbere) + 50 g rice + salad', k: 545, p: 26 },
+    vegan: { name: 'Vegan menu · rest day', vegan: true, meals: [
+      { t: '07:00', m: 'Shaker: 300 ml oat milk + 1 scoop pea protein (30 g) + 40 g oats + 1 banana + 5 g creatine', k: 485, p: 33 },
+      { t: '12:30', m: 'Lunch — your choice · aim for about 450 kcal and 25 g protein', k: 450, p: 25 },
+      { t: '17:00', m: '1 scoop pea protein (30 g) + 300 ml water + 1 apple', k: 200, p: 25 },
+      { t: '21:00', m: 'Dinner — your choice · aim for about 550–600 kcal and 25 g protein', k: 580, p: 25 },
       { t: 'Later', m: '150 g plain soy yogurt + cinnamon', k: 85, p: 6 },
     ]},
     sat: { name: 'Saturday · big gym day', meals: [
@@ -355,8 +348,7 @@ const PREP = {
   gymMon: GYM_PREP('Dinner: beef ragù portion in the fridge + potatoes'),
   gymTue: GYM_PREP('Dinner: move 250 g white fish from the freezer to the fridge tonight'),
   gymThu: ['Move Thursday’s lunch box AND the beef ragù from the freezer to the fridge tonight', 'Boil 3 eggs tonight for breakfast (+ 2 slices bread + milk)', 'Shake stuff ready: oats or muesli, whey, peanut butter, banana, milk, creatine', GYM_BAG],
-  veganWed: ['🌱 Vegan day — no eggs, milk, yogurt or whey', 'Breakfast shaker: oat milk + pea protein + oats + banana', 'Lunch box (red lentil pasta) in the fridge', 'Roasted chickpeas + apple for 17:00', 'Dinner: lentil ragù + chickpea pasta · soy yogurt'],
-  veganFri: ['🌱 Vegan day — no eggs, milk, yogurt or whey', 'Breakfast shaker: oat milk + pea protein + oats + banana', 'Lunch box (red lentil pasta) — move it from the freezer to the fridge tonight', 'Roasted chickpeas + apple for 17:00', 'Dinner: 80 g red lentils, onion, passata, rice · soy yogurt'],
+  vegan: ['🌱 Vegan day — no eggs, milk, yogurt or whey', 'Breakfast shaker: oat milk + pea protein + oats + banana', 'Lunch + dinner cooked (your choice)', '17:00: 1 scoop pea protein in a shaker + 1 apple', 'Soy yogurt for the evening'],
   sat: ['Pancake ingredients: oats, 2 eggs, banana, whey, milk', GYM_BAG + ' — Saturday session is about 90 min, any time', 'After-gym shake: whey, oat milk, banana', 'Lunch: 2 tins tuna + potatoes', 'Pizza night 🍕 — one pizza, enjoy it'],
   sun: ['Breakfast: Saturday’s pancakes in the fridge', 'Running shoes ready — or ⚽ boots, shin pads and a water bottle', 'Shopping done for Sunday prep (see the Sunday prep list)'],
 };
@@ -365,7 +357,7 @@ const EXTRA_PRESETS = [
   { n: 'Coffee with milk', k: 40, p: 2 }, { n: 'Cornetto', k: 250, p: 5 }, { n: 'Handful of nuts (20 g)', k: 120, p: 4 },
   { n: 'Slice of pizza', k: 270, p: 11 }, { n: 'Coke 330 ml', k: 140, p: 0 }, { n: 'Beer 330 ml', k: 140, p: 1 },
 ];
-const SUNDAY_PREP = ['Cook 4 portions: 600 g chicken + 320 g rice (dry) + 800 g frozen vegetables + 4 tsp oil', 'Eat 1 portion for lunch · pack 3 lunch boxes: Monday + Tuesday in the fridge, Thursday in the freezer', 'Boil 6 eggs (3 each for Monday + Tuesday) — boil 3 more on Wednesday for Thursday', 'Beef ragù: 300 g macinato di manzo + passata + onion + carrot → Monday in the fridge, Thursday in the freezer', 'Keep 200 g macinato for tonight’s burger', '2 red lentil pasta boxes — Wednesday in the fridge, Friday in the freezer', 'Lentil ragù for Wednesday dinner · roasted chickpeas for Wed + Fri', 'Check-in: weight + waist + chest in Progress'];
+const SUNDAY_PREP = ['Cook 4 portions: 600 g chicken + 320 g rice (dry) + 800 g frozen vegetables + 4 tsp oil', 'Eat 1 portion for lunch · pack 3 lunch boxes: Monday + Tuesday in the fridge, Thursday in the freezer', 'Boil 6 eggs (3 each for Monday + Tuesday) — boil 3 more on Wednesday for Thursday', 'Beef ragù: 300 g macinato di manzo + passata + onion + carrot → Monday in the fridge, Thursday in the freezer', 'Keep 200 g macinato for tonight’s burger', 'Check-in: weight + waist + chest in Progress'];
 const HABITS = [
   { id: 'creatine', n: 'Creatine 5 g' },
   { id: 'carbs', n: 'Bread & pasta budget kept' },
