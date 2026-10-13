@@ -369,18 +369,21 @@ const PLAN = {
       { t: '12:30', m: 'Lunch box', k: 555, p: 44 },
       { t: 'Gym', m: '🥤 Your shake', k: 580, p: 40 },
       { t: '21:00', m: '🍝 Beef ragù + 150 g boiled potatoes + big salad', k: 390, p: 37 },
+      { t: 'Later', m: '150 g Greek yogurt 0% + cinnamon', k: 90, p: 15 },
     ]},
     gymTue: { name: 'Gym day menu', meals: [
       { t: '07:00', m: '🥚 3 boiled eggs + 2 slices wholegrain bread + 250 ml semi-skimmed milk', k: 475, p: 31 },
       { t: '12:30', m: 'Lunch box', k: 555, p: 44 },
       { t: 'Gym', m: '🥤 Your shake', k: 580, p: 40 },
       { t: '21:00', m: '🐟 250 g white fish + 150 g potatoes + salad + 1 tsp oil', k: 360, p: 48 },
+      { t: 'Later', m: '150 g Greek yogurt 0% + cinnamon', k: 90, p: 15 },
     ]},
     gymThu: { name: 'Gym day menu', meals: [
       { t: '07:00', m: '🥚 3 boiled eggs + 2 slices wholegrain bread + 250 ml semi-skimmed milk', k: 475, p: 31 },
       { t: '12:30', m: 'Lunch box', k: 555, p: 44 },
       { t: 'Gym', m: '🥤 Your shake', k: 580, p: 40 },
       { t: '21:00', m: '🍚 Beef ragù + 50 g rice (dry) + big salad', k: 455, p: 38 },
+      { t: 'Later', m: '150 g Greek yogurt 0% + cinnamon', k: 90, p: 15 },
     ]},
     vegan: { name: 'Vegan menu · rest day', vegan: true, meals: [
       { t: '07:00', m: 'Shaker: 300 ml oat milk + 1 scoop pea protein (30 g) + 40 g oats + 1 banana + 5 g creatine', k: 485, p: 33 },
@@ -404,11 +407,11 @@ const PLAN = {
   },
 };
 const GYM_BAG = 'Gym bag: shoes, towel, water bottle, creatine';
-const GYM_PREP = dinner => ['Lunch box in the fridge', 'Breakfast: 3 boiled eggs + 2 slices bread + milk', 'Shake stuff ready: oats or muesli, whey, peanut butter, banana, milk, creatine', dinner, GYM_BAG];
+const GYM_PREP = dinner => ['Greek yogurt in the fridge for the evening', 'Lunch box in the fridge', 'Breakfast: 3 boiled eggs + 2 slices bread + milk', 'Shake stuff ready: oats or muesli, whey, peanut butter, banana, milk, creatine', dinner, GYM_BAG];
 const PREP = {
   gymMon: GYM_PREP('Dinner: beef ragù portion in the fridge + potatoes'),
   gymTue: GYM_PREP('Dinner: move 250 g white fish from the freezer to the fridge tonight'),
-  gymThu: ['Move Thursday’s lunch box AND the beef ragù from the freezer to the fridge tonight', 'Boil 3 eggs tonight for breakfast (+ 2 slices bread + milk)', 'Shake stuff ready: oats or muesli, whey, peanut butter, banana, milk, creatine', GYM_BAG],
+  gymThu: ['Move Thursday’s lunch box AND the beef ragù from the freezer to the fridge tonight', 'Greek yogurt in the fridge for the evening', 'Boil 3 eggs tonight for breakfast (+ 2 slices bread + milk)', 'Shake stuff ready: oats or muesli, whey, peanut butter, banana, milk, creatine', GYM_BAG],
   vegan: ['🌱 Vegan day — no eggs, milk, yogurt or whey', 'Breakfast shaker: oat milk + pea protein + oats + banana', 'Lunch + dinner cooked (your choice)', '17:00: 1 scoop pea protein in a shaker + 1 apple', 'Soy yogurt for the evening'],
   sat: ['Pancake ingredients: oats, 2 eggs, banana, whey, milk', GYM_BAG + ' — Saturday session is about 90 min, any time', 'After-gym shake: whey, oat milk, banana', 'Lunch: 2 tins tuna + potatoes', 'Pizza night 🍕 — one pizza, enjoy it'],
   sun: ['Breakfast: Saturday’s pancakes in the fridge', 'Running shoes ready — or ⚽ boots, shin pads and a water bottle', 'Shopping done for Sunday prep (see the Sunday prep list)'],
