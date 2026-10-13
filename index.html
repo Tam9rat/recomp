@@ -245,6 +245,7 @@ div.meal{cursor:default;grid-template-columns:48px 1fr}
 .preset b{font-size:13.5px;font-weight:600;line-height:1.2}
 .preset span{font:500 12px var(--display);color:var(--muted)}
 .linkcard{appearance:none;width:100%;text-align:left;cursor:pointer;font:inherit;color:inherit;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.bullet{width:6px;height:6px;border-radius:50%;background:var(--muted);flex:none;opacity:.6}
 .tip{display:flex;gap:12px;align-items:flex-start;font-size:14px;color:var(--muted);padding:0 4px}
 .tip svg{flex:none;color:var(--accent);margin-top:1px}
 .leaf{display:inline-flex;align-items:center;gap:5px}
@@ -406,14 +407,13 @@ const PLAN = {
     ]},
   },
 };
-const GYM_BAG = 'Gym bag: shoes, towel, water bottle, creatine';
-const GYM_PREP = dinner => ['Greek yogurt in the fridge for the evening', 'Lunch box in the fridge', 'Breakfast: 3 boiled eggs + 2 slices bread + milk', 'Shake stuff ready: oats or muesli, whey, peanut butter, banana, milk, creatine', dinner, GYM_BAG];
+const GYM_PREP = dinner => ['Greek yogurt in the fridge for the evening', 'Lunch box in the fridge', 'Breakfast: 3 boiled eggs + 2 slices bread + milk', 'Shake stuff ready: oats or muesli, whey, peanut butter, banana, milk, creatine', dinner];
 const PREP = {
   gymMon: GYM_PREP('Dinner: beef ragù portion in the fridge + potatoes'),
   gymTue: GYM_PREP('Dinner: move 250 g white fish from the freezer to the fridge tonight'),
-  gymThu: ['Move Thursday’s lunch box AND the beef ragù from the freezer to the fridge tonight', 'Greek yogurt in the fridge for the evening', 'Boil 3 eggs tonight for breakfast (+ 2 slices bread + milk)', 'Shake stuff ready: oats or muesli, whey, peanut butter, banana, milk, creatine', GYM_BAG],
+  gymThu: ['Move Thursday’s lunch box AND the beef ragù from the freezer to the fridge tonight', 'Greek yogurt in the fridge for the evening', 'Boil 3 eggs tonight for breakfast (+ 2 slices bread + milk)', 'Shake stuff ready: oats or muesli, whey, peanut butter, banana, milk, creatine'],
   vegan: ['🌱 Vegan day — no eggs, milk, yogurt or whey', 'Breakfast shaker: oat milk + pea protein + oats + banana', 'Lunch + dinner cooked (your choice)', '17:00: 1 scoop pea protein in a shaker + 1 apple', 'Soy yogurt for the evening'],
-  sat: ['Pancake ingredients: oats, 2 eggs, banana, whey, milk', GYM_BAG + ' — Saturday session is about 90 min, any time', 'After-gym shake: whey, oat milk, banana', 'Lunch: 2 tins tuna + potatoes', 'Pizza night 🍕 — one pizza, enjoy it'],
+  sat: ['Pancake ingredients: oats, 2 eggs, banana, whey, milk', 'After-gym shake: whey, oat milk, banana', 'Lunch: 2 tins tuna + potatoes', 'Pizza night 🍕 — one pizza, enjoy it'],
   sun: ['Breakfast: Saturday’s pancakes in the fridge', 'Running shoes ready — or ⚽ boots, shin pads and a water bottle', 'Shopping done for Sunday prep (see the Sunday prep list)'],
 };
 const EXTRA_PRESETS = [
@@ -656,7 +656,8 @@ function openExtraSheet() {
     <div class="muted tiny">Not sure of the kcal? Check the label (per portion), or guess — a rough number is better than nothing.</div>
   </div>`);
 }
-function checklist(items, k, field, act) {
+function checklist(items, k, field, act, live = true) {
+  if (!live) return items.map(t => `<div class="item" style="cursor:default"><span class="bullet"></span><span class="grow small">${t}</span></div>`).join('');
   const done = (dayRec(k)[field] || []);
   return items.map((t, i) => `<button class="item ${done[i] ? 'on' : ''}" data-act="${act}" data-k="${k}" data-i="${i}"><span class="grow small">${t}</span><span class="check">${CHECK}</span></button>`).join('');
 }
@@ -702,10 +703,10 @@ function renderToday() {
       <div class="row between"><span class="eyebrow">Extra food${extras.length ? ` · ${exK} kcal` : ''}</span><button class="btn sm ghost" data-act="extra-open">${ICON.plus} Add</button></div>
       ${extras.length ? `<div>${extras.map((e, i) => `<div class="list-row"><span>${e.n}</span><span class="row" style="gap:6px"><span class="num">${e.k} kcal · ${fmt(e.p)} g</span><button class="x-btn" data-act="extra-del" data-i="${i}" aria-label="Remove ${e.n}">✕</button></span></div>`).join('')}</div>` : '<div class="muted small">Anything not in the plan — a snack, a coffee, a slice of bread.</div>'}
     </section>`;
-  const prepCard = future ? `<section class="card stack"><div class="row between"><span class="eyebrow">${viewOff === 1 ? 'Prepare tonight' : 'Prepare the evening before'}</span><span class="muted tiny">for ${DOW[now.getDay()]}</span></div>
-      <div>${checklist(PREP[plan.menu] || [], k, 'prep', 'prep')}</div></section>` : '';
+  const prepCard = future && now.getDay() !== 0 ? `<section class="card stack"><div class="row between"><span class="eyebrow">${viewOff === 1 ? 'Prepare tonight' : 'Prepare the evening before'}</span><span class="muted tiny">for ${DOW[now.getDay()]}</span></div>
+      <div>${checklist(PREP[plan.menu] || [], k, 'prep', 'prep', viewOff === 1)}</div></section>` : '';
   const sundayCard = now.getDay() === 0 ? `<section class="card stack"><div class="row between"><span class="eyebrow">Sunday prep · about 1 hour</span><span class="muted tiny">covers the week</span></div>
-      <div>${checklist(SUNDAY_PREP, k, 'sprep', 'sprep')}</div></section>` : '';
+      <div>${checklist(SUNDAY_PREP, k, 'sprep', 'sprep', !future)}</div></section>` : '';
   const tw = tPlan.kind === 'rest' ? 'Rest day' : workoutOf(tPlan.w).name;
   const tomorrowCard = !future ? `<button class="card linkcard" data-act="view-day" data-off="1">
       <span class="stack" style="gap:4px"><span class="eyebrow">Tomorrow · ${DOW[parseKey(tomorrow).getDay()]}</span><b>${tw} <span class="muted" style="font-weight:500">· ${PLAN.menus[tPlan.menu].name}</span></b><span class="muted small">See the food and what to prepare tonight</span></span>${ICON.chev}</button>` : '';
