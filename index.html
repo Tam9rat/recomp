@@ -246,6 +246,10 @@ div.meal{cursor:default;grid-template-columns:48px 1fr}
 .preset span{font:500 12px var(--display);color:var(--muted)}
 .linkcard{appearance:none;width:100%;text-align:left;cursor:pointer;font:inherit;color:inherit;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .bullet{width:6px;height:6px;border-radius:50%;background:var(--muted);flex:none;opacity:.6}
+.hrow{appearance:none;width:100%;background:none;border-left:0;border-right:0;border-bottom:0;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.hrow svg{color:var(--muted);flex:none}
+.hdate{display:grid;justify-items:center;width:40px;padding:4px 0;border-radius:10px;background:var(--surface-2);font-size:11px;color:var(--muted);line-height:1.1;text-transform:uppercase;letter-spacing:.05em}
+.hdate b{font:700 18px/1 var(--display);color:var(--text);letter-spacing:0}
 .tip{display:flex;gap:12px;align-items:flex-start;font-size:14px;color:var(--muted);padding:0 4px}
 .tip svg{flex:none;color:var(--accent);margin-top:1px}
 .leaf{display:inline-flex;align-items:center;gap:5px}
@@ -587,7 +591,7 @@ let sheetUrls = [];
 const sheetUrl = blob => { const u = URL.createObjectURL(blob); sheetUrls.push(u); return u; };
 function closeSheet() { $('#sheet-root').innerHTML = ''; sheetUrls.forEach(u => URL.revokeObjectURL(u)); sheetUrls = []; }
 const view = $('#view');
-let tab = 'today', trainSel = null, photoPose = 'Front', compareFrom = null, logDate = todayKey(), viewOff = 0;
+let tab = 'today', trainSel = null, photoPose = 'Front', compareFrom = null, logDate = todayKey(), viewOff = 0, histN = 8;
 const urls = new Map();
 
 function render() {
@@ -919,8 +923,8 @@ function beep() {
 
 /* ================= PROGRESS ================= */
 function niceStep(range) { const raw = range / 4, mag = Math.pow(10, Math.floor(Math.log10(raw))); for (const m of [1, 2, 2.5, 5, 10]) if (raw <= m * mag) return m * mag; return 10 * mag; }
-function chart(pts, { target, unit, label }) {
-  if (pts.length < 2) return `<div class="empty">Log at least 2 ${label} check-ins to see your line.</div>`;
+function chart(pts, { target, unit, label, empty }) {
+  if (pts.length < 2) return `<div class="empty">${empty || `Log at least 2 ${label} check-ins to see your line.`}</div>`;
   const W = 340, H = 190, L = 34, R = 16, Tp = 18, B = 26;
   const xs = pts.map(p => parseKey(p.date).getTime()), x0 = Math.min(...xs), x1 = Math.max(...xs);
   const vals = pts.map(p => p.v).concat(target != null ? [target] : []);
@@ -969,7 +973,7 @@ function renderProgress() {
   const now = cw ? cw.weight : GOAL.start, lost = GOAL.start - now, togo = now - GOAL.target;
   const wDelta = waists.length > 1 ? waists[waists.length - 1].waist - waists[0].waist : null;
   const b = bests(), bRows = Object.entries(b).sort((a, c) => c[1].kg - a[1].kg).slice(0, 10)
-    .map(([id, v]) => `<div class="list-row"><span>${EXN[id] || id}</span><span class="num">${fmt(v.kg)} kg × ${v.r} <span class="muted tiny">${shortDate(v.date)}</span></span></div>`).join('');
+    .map(([id, v]) => `<button class="list-row hrow" data-act="ex-open" data-id="${id}"><span>${EXN[id] || id}</span><span class="row" style="gap:8px"><span class="num">${fmt(v.kg)} kg × ${v.r} <span class="muted tiny">${shortDate(v.date)}</span></span>${ICON.chev}</span></button>`).join('');
   const hist = S.checkins.slice().reverse().map((c, i) => `<div class="list-row"><span><b class="num">${shortDate(c.date)}</b> <span class="muted small">${c.note || ''}</span></span>
     <span class="row" style="gap:6px"><span class="num">${c.weight ? fmt(c.weight) + ' kg' : ''}${c.waist ? ' · waist ' + fmt(c.waist) : ''}${c.chest ? ' · chest ' + fmt(c.chest) : ''}</span><button class="x-btn" data-act="ci-del" data-date="${c.date}" aria-label="Delete check-in ${shortDate(c.date)}">✕</button></span></div>`).join('');
   view.innerHTML = `<div class="stack">
@@ -1001,7 +1005,8 @@ function renderProgress() {
       <div class="heat" aria-label="Consistency calendar, rows Monday to Sunday">${heatmap()}</div>
       <div class="muted tiny">Full square = training done + all meals + 3 habits.</div></section>
     ${runCard()}
-    <section class="card stack"><span class="eyebrow">Strength bests</span>${bRows ? `<div>${bRows}</div>` : '<div class="empty">Finish your first workout to see your bests.</div>'}</section>
+    <section class="card stack"><div class="row between"><span class="eyebrow">Strength bests</span><span class="muted tiny">tap for the chart</span></div>${bRows ? `<div>${bRows}</div>` : '<div class="empty">Finish your first workout to see your bests.</div>'}</section>
+    ${historyCard()}
     <button class="btn ghost" data-act="copy-summary">Copy weekly summary for your coach</button>
     <section class="card stack"><span class="eyebrow">History</span><div>${hist || '<div class="empty">No check-ins yet.</div>'}</div></section>
   </div>`;
@@ -1031,6 +1036,65 @@ function runCard() {
     </div>
     <div class="chart">${chart(pts, { target: 12, unit: 'km/h', label: 'speed' })}</div>
     <div>${rows}</div></section>`;
+}
+function sessStats(s) {
+  const wo = workoutOf(s.w); let sets = 0, vol = 0;
+  if (wo && wo.ex) for (const a of Object.values(s.ex || {})) for (const r of a) if (r.done) { sets++; vol += (+r.kg || 0) * (+r.r || 0); }
+  return { wo, sets, vol: Math.round(vol), steps: (s.steps || []).filter(Boolean).length };
+}
+function history() {
+  return Object.entries(S.sessions).map(([key, s]) => ({ key, date: key.split('|')[0], s, ...sessStats(s) }))
+    .filter(h => h.wo && (h.sets || h.steps || (h.s.km && h.s.min) || h.s.played))
+    .sort((a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : 0);
+}
+function historyCard() {
+  const hs = history();
+  if (!hs.length) return '<section class="card stack"><span class="eyebrow">Workout history</span><div class="empty">Your workouts will show up here.</div></section>';
+  const rows = hs.slice(0, histN).map(h => {
+    const d = parseKey(h.date), bits = [];
+    if (h.sets) bits.push(`${h.sets} sets`); if (h.vol) bits.push(`${h.vol.toLocaleString('en')} kg`);
+    if (h.s.km && h.s.min) bits.push(`${fmt(+h.s.km)} km run`); if (h.s.played) bits.push(`${h.s.played} min`);
+    if (!h.wo.ex && h.steps && !h.s.played) bits.push(`${h.steps} steps`);
+    return `<button class="list-row hrow" data-act="hist-open" data-key="${h.key}"><span class="row" style="gap:12px"><span class="hdate"><b>${d.getDate()}</b>${MON[d.getMonth()]}</span><span><b style="font-weight:600">${h.wo.name}</b><br><span class="muted small">${bits.join(' · ') || '—'}</span></span></span>${ICON.chev}</button>`;
+  }).join('');
+  return `<section class="card stack"><div class="row between"><span class="eyebrow">Workout history</span><span class="muted tiny">${hs.length} sessions</span></div>
+    <div>${rows}</div>${hs.length > histN ? '<button class="btn ghost" data-act="hist-more">Show more</button>' : ''}</section>`;
+}
+function openSession(key) {
+  const s = S.sessions[key]; if (!s) return;
+  const date = key.split('|')[0], d = parseKey(date), { wo, sets, vol } = sessStats(s);
+  const recent = daysBetween(date, todayKey()) <= 6;
+  const exRows = (wo.ex || []).map(ex => {
+    const a = (s.ex[ex.id] || []).filter(x => x.done); if (!a.length) return '';
+    return `<button class="list-row hrow" data-act="ex-open" data-id="${ex.id}"><span>${ex.n}</span><span class="row" style="gap:8px"><span class="num small">${a.map(x => ex.bw ? `${x.r}${ex.unit === 's' ? ' s' : ''}` : `${fmt(+x.kg || 0)}×${x.r}`).join(' · ')}</span>${ICON.chev}</span></button>`;
+  }).join('');
+  const steps = !wo.ex ? wo.steps.map((st, i) => `<div class="list-row"><span class="small">${st.n}</span><span>${s.steps && s.steps[i] ? '✓' : '—'}</span></div>`).join('') : '';
+  openSheet(`<div class="stack">
+    <div class="row between"><div><span class="eyebrow">${DOW[d.getDay()]} ${shortDate(date)}</span><h2 class="display h2">${wo.name}</h2></div><button class="x-btn" data-act="close" aria-label="Close">✕</button></div>
+    <div class="meta">${sets ? `<span>${sets} sets</span>` : ''}${vol ? `<span>${vol.toLocaleString('en')} kg lifted</span>` : ''}${s.km && s.min ? `<span>Run ${fmt(+s.km)} km · ${fmt(+s.min)} min · ${pace(+s.km, +s.min)}/km</span>` : ''}${s.played ? `<span>${s.played} min played</span>` : ''}</div>
+    ${exRows ? `<div>${exRows}</div>` : ''}${steps ? `<div>${steps}</div>` : ''}
+    ${!exRows && !steps ? '<div class="empty">No sets logged.</div>' : ''}
+    ${recent ? `<button class="btn ghost" data-act="hist-edit" data-key="${key}">Edit this workout</button>` : ''}
+  </div>`);
+}
+function openExercise(id) {
+  const ex = Object.values(PLAN.workouts).flatMap(w => w.ex).find(e => e.id === id); if (!ex) return;
+  const pts = [], rows = [];
+  for (const [key, s] of Object.entries(S.sessions).sort((a, b) => a[0] < b[0] ? -1 : 1)) {
+    const a = (s.ex && s.ex[id] || []).filter(x => x.done); if (!a.length) continue;
+    const date = key.split('|')[0];
+    const best = ex.bw ? Math.max(...a.map(x => +x.r || 0)) : Math.max(...a.map(x => +x.kg || 0));
+    if (best > 0) pts.push({ date, v: best });
+    rows.push(`<div class="list-row"><span class="num">${shortDate(date)}</span><span class="num small">${a.map(x => ex.bw ? `${x.r}${ex.unit === 's' ? ' s' : ''}` : `${fmt(+x.kg || 0)}×${x.r}`).join(' · ')}</span></div>`);
+  }
+  const unit = ex.bw ? (ex.unit === 's' ? 's' : 'reps') : 'kg';
+  const change = pts.length > 1 ? pts[pts.length - 1].v - pts[0].v : null;
+  openSheet(`<div class="stack">
+    <div class="row between"><div><span class="eyebrow">${ex.bw ? 'Best set per session' : 'Heaviest set per session'}</span><h2 class="display h2">${ex.n}</h2></div><button class="x-btn" data-act="close" aria-label="Close">✕</button></div>
+    ${change != null ? `<div class="pill ${change > 0 ? 'good' : ''}" style="justify-self:start;font-size:14px">${change > 0 ? '+' : change < 0 ? '−' : '±'}${fmt(Math.abs(change))} ${unit} since ${shortDate(pts[0].date)}</div>` : ''}
+    <div class="chart">${chart(pts, { unit, label: 'ex-' + id, empty: 'Log this exercise twice to see your progress line.' })}</div>
+    <div>${rows.reverse().join('') || '<div class="empty">Not logged yet.</div>'}</div>
+  </div>`);
 }
 function saveCheckin() {
   const date = $('#ci-date').value, w = num($('#ci-weight').value), waist = num($('#ci-waist').value), chest = num($('#ci-chest').value);
@@ -1186,6 +1250,10 @@ document.addEventListener('click', async e => {
       const r = dayRec(todayKey(), true); (r.extra = r.extra || []).push({ n, k: Math.round(kc), p: Math.round(pr * 10) / 10 }); save(); closeSheet(); render(); toast(`Added ${n}`); break;
     }
     case 'extra-del': { const r = dayRec(todayKey(), true); r.extra.splice(+d.i, 1); save(); render(); break; }
+    case 'hist-open': openSession(d.key); break;
+    case 'hist-more': histN += 10; render(); break;
+    case 'ex-open': openExercise(d.id); break;
+    case 'hist-edit': { const [k, w] = d.key.split('|'); closeSheet(); tab = 'train'; logDate = k; trainSel = w; viewOff = 0; render(); window.scrollTo(0, 0); break; }
     case 'view-day': viewOff = +d.off; render(); window.scrollTo(0, 0); break;
     case 'prep': case 'sprep': { const f = d.act, r = dayRec(d.k, true); r[f] = r[f] || []; r[f][+d.i] = !r[f][+d.i]; save(); render(); break; }
     case 'go-foot': tab = 'train'; trainSel = 'FOOT'; logDate = todayKey(); render(); window.scrollTo(0, 0); break;
