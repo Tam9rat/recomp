@@ -308,20 +308,20 @@ const PLAN = {
       { t: '12:30', m: 'Lunch box (prepped Sunday): 150 g chicken + 80 g rice (dry) + frozen vegetables + 1 tsp oil', k: 555, p: 44 },
       { t: '17:00', m: '⚡ Pre-workout: first half (250 ml) of the shake — 300 ml oat milk + 1 banana + 1 scoop whey + 40 g oats + 15 g peanut butter, blended in the morning', k: 290, p: 18 },
       { t: '20:45', m: '💪 Post-workout: second half (250 ml, from the fridge) + 5 g creatine', k: 290, p: 18 },
-      { t: '21:00', m: 'Quick dinner, 30+ g protein, + 1 slice bread: beef ragù (prepped) or 150 g chicken + 150 g potatoes or rice + salad — or a lean beef burger (150 g macinato di manzo 5%), 3-egg omelette with 1 tin tuna, or 300 g Greek yogurt 0% + 40 g oats + 1 fruit (no cooking)', k: 470, p: 40 },
+      { t: '21:00', m: 'Quick dinner, 30+ g protein, no bread: beef ragù (prepped) or 150 g chicken + 150 g potatoes or 50 g rice (dry) + big salad — or a lean beef burger (150 g macinato di manzo 5%), 3-egg omelette with 1 tin tuna, or 300 g Greek yogurt 0% + 40 g oats + 1 fruit (no cooking)', k: 400, p: 37 },
     ]},
     gymYogurt: { name: 'Gym day menu', meals: [
       { t: '07:00', m: '🥚 250 g Greek yogurt 0% + 30 g oats + 1 fruit + 2 boiled eggs', k: 480, p: 41 },
       { t: '12:30', m: 'Lunch box (prepped Sunday): 150 g chicken + 80 g rice (dry) + frozen vegetables + 1 tsp oil', k: 555, p: 44 },
       { t: '17:00', m: '⚡ Pre-workout: first half (250 ml) of the shake — 300 ml oat milk + 1 banana + 1 scoop whey + 40 g oats + 15 g peanut butter, blended in the morning', k: 290, p: 18 },
       { t: '20:45', m: '💪 Post-workout: second half (250 ml, from the fridge) + 5 g creatine', k: 290, p: 18 },
-      { t: '21:00', m: 'Quick dinner, 30+ g protein, + 1 slice bread: beef ragù (prepped) or 150 g chicken + 150 g potatoes or rice + salad — or a lean beef burger (150 g macinato di manzo 5%), 3-egg omelette with 1 tin tuna, or 300 g Greek yogurt 0% + 40 g oats + 1 fruit (no cooking)', k: 470, p: 40 },
+      { t: '21:00', m: 'Quick dinner, 30+ g protein, no bread: beef ragù (prepped) or 150 g chicken + 150 g potatoes or 50 g rice (dry) + big salad — or a lean beef burger (150 g macinato di manzo 5%), 3-egg omelette with 1 tin tuna, or 300 g Greek yogurt 0% + 40 g oats + 1 fruit (no cooking)', k: 400, p: 37 },
     ]},
     vegan: { name: 'Vegan menu · rest day', vegan: true, meals: [
       { t: '07:00', m: 'Shaker: 300 ml oat milk + 1 scoop pea protein + 40 g oats + 1 banana + 5 g creatine', k: 485, p: 33 },
       { t: '12:30', m: 'Lunch box: 90 g red lentil pasta + 150 g passata + 150 g vegetables + 1 tsp oil', k: 440, p: 27 },
       { t: '17:00', m: '150 g roasted chickpeas + 1 apple', k: 260, p: 11 },
-      { t: '21:00', m: '80 g chickpea pasta + lentil ragù + salad with lemon', k: 640, p: 36 },
+      { t: '21:00', m: '60 g chickpea pasta (dry, weighed) + lentil ragù + big salad with lemon', k: 570, p: 32 },
       { t: 'Later', m: '150 g plain soy yogurt + cinnamon', k: 85, p: 6 },
     ]},
     sat: { name: 'Saturday · big gym day', meals: [
@@ -354,6 +354,7 @@ const EXTRA_PRESETS = [
 const SUNDAY_PREP = ['Boil 8–10 eggs (keep unpeeled in the fridge)', '5 lunch boxes: 750 g chicken + 400 g rice (dry) + frozen vegetables', 'Beef ragù: 500 g macinato di manzo + passata + onion + carrot', '2 red lentil pasta boxes — Wednesday in the fridge, Friday in the freezer', 'Lentil ragù for Wednesday + Friday dinners', 'Roasted chickpeas for Wednesday', 'Check-in: weight + waist in Progress'];
 const HABITS = [
   { id: 'creatine', n: 'Creatine 5 g' },
+  { id: 'carbs', n: 'Bread & pasta budget kept' },
   { id: 'water', n: 'Water 2.5–3 L' },
   { id: 'steps', n: '8,000+ steps' },
   { id: 'coffee', n: 'No coffee after 16:00' },
@@ -370,6 +371,10 @@ const TIPS = [
   'Feeling very sore? Skip the Saturday intervals after Workout D and just walk 20 min.',
   'Sunday prep: boil 8–10 eggs (unpeeled, fridge), 5 lunch boxes, beef ragù, lentil boxes for Wednesday and Friday.',
   'Weekday breakfast = quick (eggs + bread or yogurt). Pancakes are for the weekend.',
+  'Bread budget: 2 slices with breakfast on Mon + Thu. Any other slice → tap “+ Slice of bread”.',
+  'Weigh pasta and rice DRY: 80 g pasta ≈ 200 g cooked · 80 g rice ≈ 240 g cooked. An Italian “normal” plate is often 120 g = +150 kcal.',
+  'Plate rule: ½ vegetables · ¼ protein · ¼ pasta, rice, potatoes or bread. Eat the protein and vegetables first.',
+  'Don’t keep bread on the table. Take your slices, then put the bag away.',
   'Every gym session starts with 10 min at 12 km/h. Legs heavy on Monday or Thursday? Drop to 11 km/h — no shame.',
   'Forgot to log yesterday? In Train, change “Logging for” to Yesterday.',
   'Sunday prep = an easy week. Chicken, rice, potatoes, lentil ragù.',
