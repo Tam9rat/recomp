@@ -17,20 +17,20 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap">
 <style>
 :root{
-  --bg:#EEF1F6; --surface:#FFFFFF; --surface-2:#E3E8F0; --line:#D6DCE6;
-  --text:#121826; --muted:#5B677B; --accent:#B86A00; --accent-ink:#FFFFFF; --accent-soft:#F6E3C4;
-  --good:#23915A; --good-soft:#DCF1E4; --warn:#C0492B; --scrim:rgba(14,19,32,.55);
-  --shadow:0 1px 2px rgba(18,24,38,.05),0 10px 30px rgba(18,24,38,.07);
+  --bg:#F3F5F9; --surface:#FFFFFF; --surface-2:#EDF0F5; --line:#E2E6EE;
+  --text:#0F1626; --muted:#5E6A7E; --accent:#B4650A; --accent-ink:#FFFFFF; --accent-soft:#FBEBD5;
+  --good:#1F8A55; --good-soft:#DDF2E6; --warn:#C0492B; --scrim:rgba(14,19,32,.5);
+  --shadow:0 1px 2px rgba(15,22,38,.04),0 6px 20px rgba(15,22,38,.05);
   --display:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;
   --body:'Barlow',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){
   :root{
-    --bg:#0E1320; --surface:#161C2C; --surface-2:#20283B; --line:#2A3349;
-    --text:#EAF0FA; --muted:#8C98AE; --accent:#F2A93B; --accent-ink:#1B1204; --accent-soft:#3A2F1A;
-    --good:#4CC883; --good-soft:#163427; --warn:#FF7A5C; --scrim:rgba(4,6,12,.7);
-    --shadow:0 1px 0 rgba(255,255,255,.03) inset,0 10px 30px rgba(0,0,0,.25);
+    --bg:#0B1020; --surface:#141A2B; --surface-2:#1C2438; --line:#242D44;
+    --text:#EDF1F8; --muted:#8A96AD; --accent:#F2A93B; --accent-ink:#1B1204; --accent-soft:#33280F;
+    --good:#4CC883; --good-soft:#132E22; --warn:#FF7A5C; --scrim:rgba(4,6,12,.7);
+    --shadow:none;
     color-scheme:dark;
   }
 }
@@ -41,7 +41,7 @@ body{background:var(--bg);color:var(--text);font:400 16px/1.45 var(--body);-webk
 button{font:inherit;color:inherit}
 img{max-width:100%;display:block}
 .app{max-width:560px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 18px) 16px calc(env(safe-area-inset-bottom,0px) + 110px)}
-.stack{display:grid;gap:14px}
+.stack{display:grid;gap:16px}
 .row{display:flex;align-items:center;gap:12px}
 .between{justify-content:space-between}
 .grow{flex:1;min-width:0}
@@ -50,9 +50,9 @@ img{max-width:100%;display:block}
 .tiny{font-size:12px}
 .display{font-family:var(--display);font-weight:700;letter-spacing:.01em;line-height:1}
 .num{font-family:var(--display);font-variant-numeric:tabular-nums;font-weight:600}
-.eyebrow{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.eyebrow{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
 h1,h2,h3{margin:0;text-wrap:balance}
-.h1{font-size:46px}
+.h1{font-size:40px}
 .h2{font-size:28px}
 .h3{font-size:21px;font-family:var(--display);font-weight:600;line-height:1.1}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:var(--shadow)}
@@ -71,8 +71,8 @@ h1,h2,h3{margin:0;text-wrap:balance}
 
 /* hero */
 .hero{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.streak{position:relative;width:84px;height:84px;flex:none}
-.streak svg{width:84px;height:84px;transform:rotate(-90deg)}
+.streak{position:relative;width:64px;height:64px;flex:none}
+.streak svg{width:64px;height:64px;transform:rotate(-90deg)}
 .streak .lbl{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
 .streak .lbl b{font:700 28px/1 var(--display)}
 .streak .lbl span{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
@@ -112,6 +112,7 @@ div.item{cursor:default}
 .target{font:600 15px var(--display);color:var(--muted);white-space:nowrap}
 .hint{font-size:13px;padding:8px 10px;border-radius:10px;background:var(--surface-2);color:var(--muted)}
 .hint.up{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.hint svg{vertical-align:-2px}
 .sets{display:grid;gap:8px}
 .set{display:grid;grid-template-columns:28px 1fr 1fr 48px;gap:8px;align-items:center}
 .set .n{font:600 15px var(--display);color:var(--muted);text-align:center}
@@ -179,6 +180,8 @@ nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:color-mix(
 nav.tabs .in{max-width:560px;width:100%;display:grid;grid-template-columns:repeat(4,1fr)}
 nav.tabs button{appearance:none;background:none;border:0;color:var(--muted);display:grid;justify-items:center;gap:2px;font:600 11px var(--body);padding:6px 0;cursor:pointer;letter-spacing:.02em}
 nav.tabs button[aria-current="page"]{color:var(--accent)}
+nav.tabs button svg{box-sizing:content-box;padding:4px 16px;border-radius:99px;transition:background .2s}
+nav.tabs button[aria-current="page"] svg{background:var(--accent-soft)}
 
 /* sheet */
 .sheet{position:fixed;inset:0;z-index:40;background:var(--scrim);display:flex;align-items:flex-end;justify-content:center;padding:16px;animation:fade .2s}
@@ -195,6 +198,64 @@ nav.tabs button[aria-current="page"]{color:var(--accent)}
 @keyframes spark{0%{opacity:1;transform:translate(-50%,-50%) rotate(var(--r)) translateY(0)}100%{opacity:0;transform:translate(-50%,-50%) rotate(var(--r)) translateY(-78px)}}
 .toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 90px);transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;font-weight:600;z-index:50;animation:up .2s}
 .banner{background:var(--accent-soft);color:var(--accent);border-radius:14px;padding:10px 14px;font-size:14px;font-weight:600}
+/* --- refined components --- */
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.top .streak .lbl b{font-size:22px}
+.top .streak .lbl span{font-size:8.5px}
+.strip{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.wd{appearance:none;border:1px solid transparent;background:var(--surface);border-radius:14px;padding:8px 0 9px;display:grid;justify-items:center;gap:3px;cursor:pointer;color:var(--text)}
+.wd:disabled{cursor:default}
+.wd .wd-l{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.06em}
+.wd .wd-n{font:600 18px/1 var(--display);font-variant-numeric:tabular-nums}
+.wd .wd-dot{width:6px;height:6px;border-radius:50%;background:var(--line)}
+.wd.done .wd-dot{background:var(--accent)}
+.wd.miss .wd-dot{background:transparent;box-shadow:inset 0 0 0 1.5px var(--muted);opacity:.6}
+.wd.today .wd-n{color:var(--accent)}
+.wd.sel{border-color:var(--accent);background:var(--accent-soft)}
+.wd.past:not(.today){opacity:.7}
+.hero-card .display.h2{font-size:30px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 14px;color:var(--muted);font-size:14px}
+.meta span{display:inline-flex;align-items:center;gap:5px}
+.macros{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.macro{display:flex;align-items:center;gap:12px;background:var(--surface-2);border-radius:16px;padding:12px}
+.macro svg{width:56px;height:56px;transform:rotate(-90deg);flex:none}
+.macro b{display:block;font:700 22px/1.05 var(--display);font-variant-numeric:tabular-nums}
+.macro span{font-size:12px;color:var(--muted)}
+.meal{appearance:none;width:100%;background:none;border:0;border-top:1px solid var(--line);display:grid;grid-template-columns:48px 1fr 30px;gap:12px;align-items:start;padding:14px 0;text-align:left;cursor:pointer;color:inherit}
+.meal:first-child{border-top:0;padding-top:4px}
+div.meal{cursor:default;grid-template-columns:48px 1fr}
+.meal-time{font:600 13px/1.6 var(--display);color:var(--muted);letter-spacing:.02em}
+.meal-body{display:grid;gap:3px;min-width:0}
+.meal-title{font-weight:600;font-size:15.5px;line-height:1.3}
+.meal-detail{font-size:13.5px;color:var(--muted);line-height:1.4}
+.meal-macro{font:500 12.5px var(--display);color:var(--muted);letter-spacing:.02em}
+.meal .check{margin-top:2px}
+.meal.on .meal-title{color:var(--muted)}
+.meal.on>.check{background:var(--good);border-color:var(--good);color:#fff}
+.meal.on>.check svg{opacity:1;transform:none}
+.hpills{display:flex;flex-wrap:wrap;gap:8px}
+.hpill{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:99px;padding:8px 13px 8px 9px;font:500 14px var(--body);display:inline-flex;align-items:center;gap:7px;cursor:pointer}
+.hpill i{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;flex:none}
+.hpill i svg{width:12px;height:12px;opacity:0}
+.hpill.on{background:var(--good-soft);border-color:transparent;color:var(--good)}
+.hpill.on i{background:var(--good);border-color:var(--good);color:#fff}
+.hpill.on i svg{opacity:1}
+.presets{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.preset{appearance:none;border:1px solid var(--line);background:var(--surface-2);border-radius:14px;padding:10px 8px;text-align:left;cursor:pointer;color:var(--text);display:grid;gap:2px}
+.preset b{font-size:13.5px;font-weight:600;line-height:1.2}
+.preset span{font:500 12px var(--display);color:var(--muted)}
+.linkcard{appearance:none;width:100%;text-align:left;cursor:pointer;font:inherit;color:inherit;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.tip{display:flex;gap:12px;align-items:flex-start;font-size:14px;color:var(--muted);padding:0 4px}
+.tip svg{flex:none;color:var(--accent);margin-top:1px}
+.leaf{display:inline-flex;align-items:center;gap:5px}
+.daypick{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:4px 6px 4px 12px;color:var(--muted);font-size:13px;font-weight:600}
+.daypick select{appearance:none;-webkit-appearance:none;border:0;background:transparent;color:var(--text);font:600 14px var(--body);padding:4px 18px 4px 0;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 9px) 52%,calc(100% - 4px) 52%;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+.setbar{display:grid;gap:6px}
+.setbar .row{font-size:13px;color:var(--muted)}
+.ex-n{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:8px;background:var(--surface-2);color:var(--muted);font:700 13px var(--display);margin-right:8px;vertical-align:3px}
+.set-head{display:grid;grid-template-columns:28px 1fr 1fr 48px;gap:8px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:0 2px}
+.set-head span:nth-child(1),.set-head span:nth-child(4){text-align:center}
+@media (max-width:370px){.set-head{grid-template-columns:22px 1fr 1fr 44px}.presets{grid-template-columns:1fr 1fr}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.medal .ring,.medal .tick{stroke-dashoffset:0}}
 @media (max-width:370px){.h1{font-size:40px}.tiles{grid-template-columns:1fr 1fr}.set{grid-template-columns:22px 1fr 1fr 44px}}
 </style>
@@ -532,10 +593,10 @@ function render() {
 }
 
 /* ================= TODAY ================= */
-function ring(value, max, size = 84, stroke = 8) {
+function ring(value, max, size = 84, stroke = 8, color = 'var(--accent)') {
   const r = (size - stroke) / 2, c = 2 * Math.PI * r, f = Math.min(1, value / max);
   return `<svg viewBox="0 0 ${size} ${size}" aria-hidden="true"><circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="var(--surface-2)" stroke-width="${stroke}"/>
-    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="var(--accent)" stroke-width="${stroke}" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c * (1 - f)}"/></svg>`;
+    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${color}" stroke-width="${stroke}" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c * (1 - f)}"/></svg>`;
 }
 function weekDots() {
   const t = parseKey(todayKey()), mon = addDays(t, -((t.getDay() + 6) % 7));
@@ -544,6 +605,53 @@ function weekDots() {
     const cls = st.trained ? 'done' : (d < t && k >= S.start ? 'miss' : '');
     return `<div class="dot ${cls} ${isT ? 'today' : ''}" title="${DOW[d.getDay()]}">${l}</div>`;
   }).join('');
+}
+const ICON = {
+  clock: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  list: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg>',
+  arrow: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+  chev: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>',
+  leaf: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-8 5-14 15-14 0 10-6 15-14 15"/><path d="M5 19l7-7"/></svg>',
+  bulb: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 00-4 12.7V16h8v-1.3A7 7 0 0012 2z"/></svg>',
+  plus: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  cal: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
+  up: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>',
+};
+// Split "Title — detail" / "Title: detail" and drop a leading emoji, for tidy meal rows
+function mealParts(text) {
+  const t = text.replace(/^[^\p{L}\p{N}(]+/u, '');
+  const i = t.indexOf(' — '), j = t.indexOf(': ');
+  const cut = i > 0 && i < 40 ? [i, 3] : j > 0 && j < 32 ? [j, 2] : null;
+  if (!cut) return { title: t, detail: '' };
+  const d = t.slice(cut[0] + cut[1]);
+  return { title: t.slice(0, cut[0]), detail: d.charAt(0).toUpperCase() + d.slice(1) };
+}
+function weekStrip(viewK) {
+  const tk = todayKey(), t = parseKey(tk), mon = addDays(t, -((t.getDay() + 6) % 7));
+  return ['M','T','W','T','F','S','S'].map((l, i) => {
+    const d = addDays(mon, i), k = keyOf(d), off = daysBetween(tk, k), st = dayStatus(k);
+    const cls = [st.trained ? 'done' : (off < 0 && k >= S.start ? 'miss' : ''), off === 0 ? 'today' : '', off < 0 ? 'past' : '', k === viewK ? 'sel' : ''].join(' ');
+    const attr = off >= 0 ? `data-act="view-day" data-off="${off}"` : 'disabled';
+    return `<button class="wd ${cls}" ${attr} aria-label="${DOW[d.getDay()]} ${d.getDate()}${st.trained ? ', done' : ''}"><span class="wd-l">${l}</span><span class="wd-n">${d.getDate()}</span><i class="wd-dot"></i></button>`;
+  }).join('');
+}
+function macroRing(val, max, color, unit, label) {
+  const over = val > max;
+  return `<div class="macro">${ring(val, max, 56, 6, over ? 'var(--warn)' : color)}<div><b style="${over ? 'color:var(--warn)' : ''}">${val.toLocaleString('en')}${unit === 'g' ? '<small style="font-size:14px"> g</small>' : ''}</b><span>of ${max.toLocaleString('en')} ${unit === 'g' ? 'g ' : ''}${label}</span></div></div>`;
+}
+function openExtraSheet() {
+  openSheet(`<div class="stack">
+    <div class="row between"><h2 class="display h2">Extra food</h2><button class="x-btn" data-act="close" aria-label="Close">✕</button></div>
+    <div class="presets">${EXTRA_PRESETS.map((x, i) => `<button class="preset" data-act="extra-preset" data-i="${i}"><b>${x.n}</b><span>${x.k} kcal · ${x.p} g</span></button>`).join('')}</div>
+    <span class="eyebrow">Or type it</span>
+    <div class="grid3">
+      <label class="field">Food<input type="text" id="ex-n" autocomplete="off" placeholder="e.g. cake"></label>
+      <label class="field">kcal<input type="text" inputmode="numeric" autocomplete="off" id="ex-k" placeholder="200"></label>
+      <label class="field">Protein g<input type="text" inputmode="decimal" autocomplete="off" id="ex-p" placeholder="0"></label>
+    </div>
+    <button class="btn" data-act="extra-add">Add</button>
+    <div class="muted tiny">Not sure of the kcal? Check the label (per portion), or guess — a rough number is better than nothing.</div>
+  </div>`);
 }
 function checklist(items, k, field, act) {
   const done = (dayRec(k)[field] || []);
@@ -556,14 +664,12 @@ function renderToday() {
   const s = streak(), next = [3, 7, 14, 30, 60, 90, 180, 365].find(m => m > s) || s + 1;
   const pre = k < S.start;
   const wk = future ? (viewOff === 1 ? 'Tomorrow · plan ahead' : `In ${viewOff} days · plan ahead`) : pre ? `Starts ${shortDate(S.start)}` : `Week ${weekNo()} of ${GOAL.weeks}${learning() ? ' · learning phase' : ''}`;
-  const dayChips = Array.from({ length: 7 }, (_, i) => { const d = addDays(parseKey(today), i);
-    return `<button class="chip" data-act="view-day" data-off="${i}" aria-pressed="${i === viewOff}">${i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : DOW[d.getDay()].slice(0, 3)}</button>`; }).join('');
   const label = future ? `${DOW[now.getDay()]}’s` : 'Today’s';
 
   let training;
   if (plan.kind === 'rest') {
-    training = `<section class="card stack">
-      <div class="eyebrow">${label} training</div>
+    training = `<section class="card stack hero-card">
+      <div class="row between"><span class="eyebrow">${label} training</span>${rec.walk ? '<span class="pill good">Done ✓</span>' : '<span class="pill">Recovery</span>'}</div>
       <button class="item ${rec.walk ? 'on' : ''}" data-act="walk" style="padding:0" ${future ? 'disabled' : ''}>
         <span class="grow"><span class="display h2" style="display:block">Rest day</span><span class="muted small">20–30 min easy walk · recovery builds the muscle</span></span>
         <span class="check">${CHECK}</span></button>
@@ -571,76 +677,66 @@ function renderToday() {
   } else {
     const footToday = plan.w === 'SUN' && S.sessions[k + '|FOOT'];
     const w = workoutOf(footToday ? 'FOOT' : plan.w);
-    const meta = w.ex ? `${w.ex.length} exercises · about ${w.min || 60} min` : `${w.steps.length} steps · about 35 min`;
-    training = `<section class="card stack">
+    const meta = `<div class="meta"><span>${ICON.clock}${w.ex ? `about ${w.min || 60} min` : 'about 35 min'}</span><span>${ICON.list}${w.ex ? `${w.ex.length} exercises` : `${w.steps.length} steps`}</span></div>`;
+    training = `<section class="card stack hero-card">
       <div class="row between"><span class="eyebrow">${label} training</span>${st.trained ? '<span class="pill good">Done ✓</span>' : `<span class="pill accent">${plan.time || 'Any time'}</span>`}</div>
-      <div><div class="display h2">${w.name}</div><div class="muted">${w.focus} · ${meta}</div></div>
-      ${future ? `<div class="muted small">${w.ex ? 'Warm-up: 5 min walk + 10 min run at 12 km/h. ' : ''}${w.ex ? w.ex.map(e => e.n).join(' · ') : w.steps.map(x => x.n).join(' · ')}</div>` : `<button class="btn ${st.trained ? 'ghost' : ''}" data-act="go-train">${st.trained ? 'View workout' : 'Start workout'}
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>${plan.w === 'SUN' && !st.trained && !footToday ? '<button class="btn ghost" data-act="go-foot">⚽ Playing football instead</button>' : ''}`}
+      <div class="stack" style="gap:6px"><div class="display h2">${w.name}</div><div class="muted">${w.focus}</div>${meta}</div>
+      ${future ? `<div class="muted small">${w.ex ? 'Warm-up run, then: ' : ''}${w.ex ? w.ex.map(e => e.n).join(' · ') : w.steps.map(x => x.n).join(' · ')}</div>` : `<button class="btn ${st.trained ? 'ghost' : ''}" data-act="go-train">${st.trained ? 'View workout' : 'Start workout'}${ICON.arrow}</button>${plan.w === 'SUN' && !st.trained && !footToday ? '<button class="btn ghost" data-act="go-foot">⚽ Playing football instead</button>' : ''}`}
     </section>`;
   }
 
   const extras = rec.extra || [];
   const eaten = menu.meals.reduce((a, m, i) => a + (rec.meals[i] ? m.k : 0), 0) + extras.reduce((a, e) => a + e.k, 0);
-  const prot = menu.meals.reduce((a, m, i) => a + (rec.meals[i] ? m.p : 0), 0) + extras.reduce((a, e) => a + e.p, 0);
-  const extraCard = future ? '' : `<section class="card stack">
-      <div class="row between"><span class="eyebrow">Extra food</span><span class="muted tiny">anything not in the plan</span></div>
-      ${extras.length ? `<div>${extras.map((e, i) => `<div class="list-row"><span>${e.n}</span><span class="row" style="gap:6px"><span class="num">${e.k} kcal · ${fmt(e.p)} g</span><button class="x-btn" data-act="extra-del" data-i="${i}" aria-label="Remove ${e.n}">✕</button></span></div>`).join('')}</div>` : ''}
-      <div class="chips">${EXTRA_PRESETS.map((x, i) => `<button class="chip" data-act="extra-preset" data-i="${i}">+ ${x.n}</button>`).join('')}</div>
-      <div class="grid3">
-        <label class="field">Food<input type="text" id="ex-n" autocomplete="off" placeholder="e.g. cake"></label>
-        <label class="field">kcal<input type="text" inputmode="numeric" autocomplete="off" id="ex-k" placeholder="200"></label>
-        <label class="field">Protein g<input type="text" inputmode="decimal" autocomplete="off" id="ex-p" placeholder="0"></label>
-      </div>
-      <button class="btn ghost" data-act="extra-add">Add extra food</button>
-      <div class="muted tiny">Not sure of the kcal? Check the label (per portion), or guess — a rough number is better than nothing.</div>
-    </section>`;
+  const prot = Math.round(menu.meals.reduce((a, m, i) => a + (rec.meals[i] ? m.p : 0), 0) + extras.reduce((a, e) => a + e.p, 0));
   const kTot = menu.meals.reduce((a, m) => a + m.k, 0), pTot = menu.meals.reduce((a, m) => a + m.p, 0);
-  const meals = menu.meals.map((m, i) => future
-    ? `<div class="item"><span class="time">${m.t}</span><span class="grow small">${m.m}<br><span class="tiny muted num">${m.k} kcal · ${m.p} g protein</span></span></div>`
-    : `<button class="item ${rec.meals[i] ? 'on' : ''}" data-act="meal" data-i="${i}">
-      <span class="time">${m.t}</span><span class="grow meal-text small">${m.m}<br><span class="tiny muted num">${m.k} kcal · ${m.p} g protein</span></span><span class="check">${CHECK}</span></button>`).join('');
+  const meals = menu.meals.map((m, i) => {
+    const { title, detail } = mealParts(m.m);
+    const body = `<span class="meal-time">${m.t}</span><span class="meal-body"><span class="meal-title">${title}</span>${detail ? `<span class="meal-detail">${detail}</span>` : ''}<span class="meal-macro">${m.k} kcal · ${m.p} g protein</span></span>`;
+    return future ? `<div class="meal">${body}</div>` : `<button class="meal ${rec.meals[i] ? 'on' : ''}" data-act="meal" data-i="${i}" aria-pressed="${!!rec.meals[i]}">${body}<span class="check">${CHECK}</span></button>`;
+  }).join('');
+  const exK = extras.reduce((a, e) => a + e.k, 0);
+  const extraCard = future ? '' : `<section class="card stack">
+      <div class="row between"><span class="eyebrow">Extra food${extras.length ? ` · ${exK} kcal` : ''}</span><button class="btn sm ghost" data-act="extra-open">${ICON.plus} Add</button></div>
+      ${extras.length ? `<div>${extras.map((e, i) => `<div class="list-row"><span>${e.n}</span><span class="row" style="gap:6px"><span class="num">${e.k} kcal · ${fmt(e.p)} g</span><button class="x-btn" data-act="extra-del" data-i="${i}" aria-label="Remove ${e.n}">✕</button></span></div>`).join('')}</div>` : '<div class="muted small">Anything not in the plan — a snack, a coffee, a slice of bread.</div>'}
+    </section>`;
   const prepCard = future ? `<section class="card stack"><div class="row between"><span class="eyebrow">${viewOff === 1 ? 'Prepare tonight' : 'Prepare the evening before'}</span><span class="muted tiny">for ${DOW[now.getDay()]}</span></div>
       <div>${checklist(PREP[plan.menu] || [], k, 'prep', 'prep')}</div></section>` : '';
   const sundayCard = now.getDay() === 0 ? `<section class="card stack"><div class="row between"><span class="eyebrow">Sunday prep · about 1 hour</span><span class="muted tiny">covers the week</span></div>
       <div>${checklist(SUNDAY_PREP, k, 'sprep', 'sprep')}</div></section>` : '';
   const tw = tPlan.kind === 'rest' ? 'Rest day' : workoutOf(tPlan.w).name;
-  const tomorrowCard = !future ? `<button class="card row between" data-act="view-day" data-off="1" style="text-align:left;cursor:pointer;width:100%;font:inherit;color:inherit">
-      <span><span class="eyebrow">Tomorrow · ${DOW[parseKey(tomorrow).getDay()]}</span><br><b>${tw}</b> <span class="muted small">· ${PLAN.menus[tPlan.menu].name}</span><br><span class="muted small">See the food and what to prepare tonight</span></span>
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>` : '';
-  const habits = HABITS.map(h => `<button class="habit ${rec.habits[h.id] ? 'on' : ''}" data-act="habit" data-id="${h.id}"><span class="check">${CHECK}</span>${h.n}</button>`).join('');
+  const tomorrowCard = !future ? `<button class="card linkcard" data-act="view-day" data-off="1">
+      <span class="stack" style="gap:4px"><span class="eyebrow">Tomorrow · ${DOW[parseKey(tomorrow).getDay()]}</span><b>${tw} <span class="muted" style="font-weight:500">· ${PLAN.menus[tPlan.menu].name}</span></b><span class="muted small">See the food and what to prepare tonight</span></span>${ICON.chev}</button>` : '';
+  const hDone = HABITS.filter(h => rec.habits[h.id]).length;
+  const habits = HABITS.map(h => `<button class="hpill ${rec.habits[h.id] ? 'on' : ''}" data-act="habit" data-id="${h.id}" aria-pressed="${!!rec.habits[h.id]}"><i>${CHECK}</i>${h.n}</button>`).join('');
 
   const sunday = now.getDay() === 0 && !S.checkins.some(c => daysBetween(c.date, k) < 6 && daysBetween(c.date, k) >= 0 && c.date >= S.start);
   const tip = TIPS[Math.floor(now / 864e5) % TIPS.length];
 
   view.innerHTML = `<div class="stack">
-    <header class="hero">
-      <div class="stack" style="gap:6px">
+    <header class="top">
+      <div class="stack" style="gap:4px">
         <span class="eyebrow">${wk}</span>
         <h1 class="display h1">${DOW[now.getDay()]}</h1>
-        <span class="muted">${now.getDate()} ${MON[now.getMonth()]} ${now.getFullYear()}</span>
+        <span class="muted small">${now.getDate()} ${MON[now.getMonth()]} ${now.getFullYear()}</span>
       </div>
       <div class="row" style="align-items:flex-start;gap:8px">
-        <div class="streak" aria-label="${s} day streak">${ring(s, next)}<div class="lbl"><b>${s}</b><span>day streak</span></div></div>
+        <div class="streak" aria-label="${s} day streak">${ring(s, next, 64, 6)}<div class="lbl"><b>${s}</b><span>streak</span></div></div>
         <button class="icon-btn" data-act="settings" aria-label="Settings"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg></button>
       </div>
     </header>
-    <div class="week" aria-label="This week">${weekDots()}</div>
-    <div class="chips" aria-label="Choose a day">${dayChips}</div>
-    ${sunday && !future ? `<button class="banner" data-act="tab" data-tab="progress" style="border:0;text-align:left;cursor:pointer">Sunday check-in → log your weight + waist</button>` : ''}
+    <div class="strip" aria-label="This week — tap a day to look ahead">${weekStrip(k)}</div>
+    ${sunday && !future ? `<button class="banner" data-act="tab" data-tab="progress" style="border:0;text-align:left;cursor:pointer">Sunday check-in → weight, waist + chest</button>` : ''}
     ${training}
     <section class="card stack">
-      <div class="row between"><span class="eyebrow">${menu.name}</span>${menu.vegan ? '<span class="pill good">🌱 Vegan day</span>' : ''}</div>
-      ${future ? `<div class="muted small num">${kTot} kcal · ${pTot} g protein</div>` : `<div class="grid2">
-        <div class="stack" style="gap:6px"><div class="row between small"><span class="muted">Calories</span><span class="num" style="${eaten > kTot ? 'color:var(--warn)' : ''}">${eaten} / ${kTot}</span></div><div class="bar"><i style="width:${Math.min(100, eaten / kTot * 100)}%"></i></div></div>
-        <div class="stack" style="gap:6px"><div class="row between small"><span class="muted">Protein</span><span class="num">${prot} / ${pTot} g</span></div><div class="bar good"><i style="width:${Math.min(100, prot / pTot * 100)}%"></i></div></div>
-      </div>`}
+      <div class="row between"><span class="eyebrow">${menu.name}</span>${menu.vegan ? `<span class="pill good leaf">${ICON.leaf} Vegan</span>` : ''}</div>
+      ${future ? `<div class="muted small num">${kTot.toLocaleString('en')} kcal · ${pTot} g protein planned</div>` : `<div class="macros">${macroRing(eaten, kTot, 'var(--accent)', 'kcal', 'kcal')}${macroRing(prot, pTot, 'var(--good)', 'g', 'protein')}</div>`}
       <div>${meals}</div>
     </section>
     ${extraCard}${prepCard}${sundayCard}
-    ${future ? `<button class="btn ghost" data-act="view-day" data-off="0">Back to today</button>` : `${tomorrowCard}
-    <section class="stack" style="gap:10px"><span class="eyebrow">Daily habits</span><div class="habits">${habits}</div></section>
-    <section class="card flat small"><span class="eyebrow">Coach tip</span><div style="margin-top:6px">${tip}</div></section>`}
+    ${future ? `<button class="btn ghost" data-act="view-day" data-off="0">Back to today</button>` : `
+    <section class="card stack"><div class="row between"><span class="eyebrow">Daily habits</span><span class="muted tiny num">${hDone} / ${HABITS.length}</span></div><div class="hpills">${habits}</div></section>
+    ${tomorrowCard}
+    <div class="tip">${ICON.bulb}<span>${tip}</span></div>`}
   </div>`;
 }
 
@@ -651,10 +747,12 @@ function renderTrain() {
   const p = planFor(logDate), w = currentW(), wo = workoutOf(w), sess = getSession(w, false), past = logDate !== todayKey();
   const chips = [['A','A · Legs'],['B','B · Upper'],['C','C · Full'],['D','D · Arms'],['SAT','Intervals'],['SUN','Sun run'],['FOOT','⚽ Football']]
     .map(([id, l]) => `<button class="chip" data-act="pick-w" data-w="${id}" aria-pressed="${id === w}">${l}${p.w === id ? '<span class="today-mark" title="Today"></span>' : ''}</button>`).join('');
+  const totalSets = wo.ex ? wo.ex.reduce((a, e) => a + setsOn(e, logDate), 0) : 0;
+  const doneSets = wo.ex && sess ? Object.values(sess.ex || {}).reduce((a, arr) => a + arr.filter(x => x.done).length, 0) : 0;
   const restNote = p.kind === 'rest' && !trainSel ? `<div class="banner">${DOW[parseKey(logDate).getDay()]} is your rest day — walk 20–30 min. Pick a workout above only if you’re making one up.</div>` : '';
   let body = '';
   if (wo.ex) {
-    body = wo.ex.map(ex => {
+    body = wo.ex.map((ex, idx) => {
       const last = lastSets(ex.id, logDate), sug = suggest(ex, last), n = setsOn(ex, logDate);
       const sets = (sess && sess.ex[ex.id]) || [];
       const lastTxt = last ? `Last (${shortDate(last.date)}): ${last.sets.map(s => ex.bw ? s.r : `${fmt(+s.kg || 0)}×${s.r}`).join(' · ')}` : '';
@@ -670,10 +768,10 @@ function renderTrain() {
       }).join('');
       const range = ex.lo === ex.hi ? ex.hi : `${ex.lo}–${ex.hi}`;
       return `<section class="card stack">
-        <div class="ex-head"><div><h3 class="h3">${ex.n}</h3>${ex.note ? `<div class="muted small">${ex.note}</div>` : ''}</div>
+        <div class="ex-head"><div style="display:flex;align-items:flex-start"><span class="ex-n">${idx + 1}</span><div><h3 class="h3">${ex.n}</h3>${ex.note ? `<div class="muted small">${ex.note}</div>` : ''}</div></div>
           <div class="target">${n} × ${range}${ex.unit === 's' ? ' s' : ''}<br><span class="tiny">rest ${ex.rest >= 120 ? '2 min' : ex.rest + ' s'}</span></div></div>
-        <div class="hint ${sug.up ? 'up' : ''}">${sug.txt}${lastTxt ? `<br><span class="tiny" style="font-weight:500;color:var(--muted)">${lastTxt}</span>` : ''}</div>
-        <div class="sets">${rows}</div>
+        <div class="hint ${sug.up ? 'up' : ''}">${sug.up ? ICON.up + ' ' : ''}${sug.txt}${lastTxt ? `<br><span class="tiny" style="font-weight:500;color:var(--muted)">${lastTxt}</span>` : ''}</div>
+        <div class="sets"><div class="set-head"><span>Set</span><span>${ex.bw ? '' : 'kg'}</span><span>${ex.unit === 's' ? 'sec' : 'reps'}</span><span>Done</span></div>${rows}</div>
       </section>`;
     }).join('');
   } else {
@@ -691,8 +789,9 @@ function renderTrain() {
     <header class="stack" style="gap:6px">
       <span class="eyebrow">${daysBetween(S.start, logDate) < 14 ? 'Weeks 1–2 · lighter weights, 3 sets, perfect form' : `Week ${weekNo(logDate)} · add weight when you hit the top`}</span>
       <h1 class="display h1">${wo.name}</h1><span class="muted">${wo.focus}</span>
+      <div class="row between" style="margin-top:6px"><label class="daypick">${ICON.cal}<select id="log-date" aria-label="Day you are logging">${dayOptions()}</select></label>${wo.ex ? `<span class="muted small num">${doneSets} / ${totalSets} sets</span>` : ''}</div>
+      ${wo.ex ? `<div class="bar"><i style="width:${totalSets ? Math.min(100, doneSets / totalSets * 100) : 0}%"></i></div>` : ''}
     </header>
-    <label class="field logfor">Logging for<select id="log-date">${dayOptions()}</select></label>
     ${past ? `<div class="banner">Logging a past day: ${DOW[parseKey(logDate).getDay()]} ${shortDate(logDate)}</div>` : ''}
     <div class="chips">${chips}</div>
     ${restNote}
@@ -1074,12 +1173,13 @@ document.addEventListener('click', async e => {
   if (d.act === 'scrim' && e.target !== t) return;
   switch (d.act) {
     case 'tab': tab = d.tab; compareFrom = null; logDate = todayKey(); viewOff = 0; if (tab === 'train') trainSel = null; closeSheet(); render(); window.scrollTo(0, 0); break;
-    case 'extra-preset': { const r = dayRec(todayKey(), true), x = EXTRA_PRESETS[+d.i]; (r.extra = r.extra || []).push({ ...x }); save(); render(); toast(`Added ${x.n} · ${x.k} kcal`); break; }
+    case 'extra-open': openExtraSheet(); setTimeout(() => { const n = $('#ex-n'); if (n && matchMedia('(pointer:fine)').matches) n.focus(); }, 50); break;
+    case 'extra-preset': { const r = dayRec(todayKey(), true), x = EXTRA_PRESETS[+d.i]; (r.extra = r.extra || []).push({ ...x }); save(); closeSheet(); render(); toast(`Added ${x.n} · ${x.k} kcal`); break; }
     case 'extra-add': {
       const n = ($('#ex-n').value.trim() || 'Extra food').slice(0, 40), kc = num($('#ex-k').value), pr = $('#ex-p').value.trim() ? num($('#ex-p').value) : 0;
       if (!(kc >= 1 && kc <= 3000)) { toast('Enter the kcal as a number, like 250'); break; }
       if (!(pr >= 0 && pr <= 200)) { toast('Protein should be a number of grams, like 10'); break; }
-      const r = dayRec(todayKey(), true); (r.extra = r.extra || []).push({ n, k: Math.round(kc), p: Math.round(pr * 10) / 10 }); save(); render(); toast(`Added ${n}`); break;
+      const r = dayRec(todayKey(), true); (r.extra = r.extra || []).push({ n, k: Math.round(kc), p: Math.round(pr * 10) / 10 }); save(); closeSheet(); render(); toast(`Added ${n}`); break;
     }
     case 'extra-del': { const r = dayRec(todayKey(), true); r.extra.splice(+d.i, 1); save(); render(); break; }
     case 'view-day': viewOff = +d.off; render(); window.scrollTo(0, 0); break;
